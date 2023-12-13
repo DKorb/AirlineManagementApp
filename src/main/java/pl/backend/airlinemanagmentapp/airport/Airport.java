@@ -24,7 +24,7 @@ public class Airport {
     private Integer id;
 
     @Column(nullable = false, unique = true)
-    @Size(min = 3, max = 3)
+    @Size(min = 3, max = 3, message = "Code must be 3 characters long")
     private String code;
 
     @Column(nullable = false)
