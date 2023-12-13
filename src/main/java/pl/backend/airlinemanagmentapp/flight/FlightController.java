@@ -18,12 +18,12 @@ public class FlightController {
     private final FlightService flightService;
 
     @PostMapping
-    public ResponseEntity<Flight> createFlight(@RequestBody FlightDTO flight) throws AirportNotFoundException {
+    public ResponseEntity<Flight> createFlight(@RequestBody FlightDTO flight) {
         return new ResponseEntity<>(flightService.createFlight(flight), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Flight> getFlightById(@PathVariable Integer id) throws FlightNotFoundException {
+    public ResponseEntity<Flight> getFlightById(@PathVariable Integer id) {
         return new ResponseEntity<>(flightService.findFlightById(id), HttpStatus.OK);
     }
 
@@ -33,7 +33,7 @@ public class FlightController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Flight> updateFlight(@PathVariable Integer id) throws FlightNotFoundException {
+    public ResponseEntity<Flight> updateFlight(@PathVariable Integer id) {
         return new ResponseEntity<>(flightService.updateFlight(id), HttpStatus.OK);
     }
 

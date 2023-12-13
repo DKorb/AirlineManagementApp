@@ -26,15 +26,17 @@ public class FlightService {
     }
 
     private FlightDTO convertToDto(Flight flight) {
-        return new FlightDTO(
-                flight.getFlightNumber(),
-                flight.getDepartureAirport().getId(),
-                flight.getArrivalAirport().getId());
+        return FlightDTO.builder()
+                .flightNumber(flight.getFlightNumber())
+                .departureAirportId(flight.getDepartureAirport().getId())
+                .arrivalAirportId(flight.getArrivalAirport().getId())
+                .build();
     }
 
-    public Flight findFlightById(Integer id) throws FlightNotFoundException {
-        return flightRepository.findById(id)
-                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + id + " not found"));
+
+    public Flight findFlightById(Integer flightId) {
+        return flightRepository.findById(flightId)
+                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
     }
 
     public Flight createFlight(FlightDTO flightDTO) throws AirportNotFoundException {
@@ -51,13 +53,13 @@ public class FlightService {
         return flightRepository.save(flight);
     }
 
-    public Flight updateFlight(Integer id) throws FlightNotFoundException {
-        Flight existingFlight = findFlightById(id);
+    public Flight updateFlight(Integer flightId) {
+        Flight existingFlight = findFlightById(flightId);
         return flightRepository.save(existingFlight);
     }
 
-    public void deleteFlight(Integer id) {
-        flightRepository.deleteById(id);
+    public void deleteFlight(Integer flightId) {
+        flightRepository.deleteById(flightId);
     }
 
 }
