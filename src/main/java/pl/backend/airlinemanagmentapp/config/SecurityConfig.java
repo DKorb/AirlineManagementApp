@@ -40,12 +40,16 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html",
+            "/api/v1/**"};
+
+    // private static final String AIRPORT_ENDPOINT = "/api/v1/airports/**";
 
     private final JWTAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
+    // TODO: Poprawić endpointy dla konkretnej roli
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -53,7 +57,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/v1/auth/**").permitAll()
+//                                .requestMatchers(AIRPORT_ENDPOINT).hasAnyRole(USER.name())
+//                                .requestMatchers(GET, AIRPORT_ENDPOINT).permitAll()
+//                                .requestMatchers(POST, AIRPORT_ENDPOINT).hasAnyAuthority(USER.name())
+//                                .requestMatchers(PUT, AIRPORT_ENDPOINT).hasAnyAuthority(USER.name())
+//                                .requestMatchers(DELETE, AIRPORT_ENDPOINT).hasAnyAuthority(USER.name())
                                 .anyRequest()
                                 .authenticated()
                 )
