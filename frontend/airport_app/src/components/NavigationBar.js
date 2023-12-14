@@ -4,6 +4,10 @@ import { BsFillPersonPlusFill } from 'react-icons/bs'
 
 const NavigationBar = () => {
 
+    const logout = () => {
+        localStorage.clear()
+      }
+
     const guestNavbar = () => (
         <>
             <Nav.Link style={{ position: 'absolute', right: 10, top: 10 }} href='/register'><BsFillPersonPlusFill style={{ marginRight: '2px'}} />Register</Nav.Link>
@@ -12,7 +16,7 @@ const NavigationBar = () => {
     )
 
     const userNavbar = () => (
-        <Nav.Link style={{ position: 'absolute', right: 10, top: 10 }} href='/login'>Logout</Nav.Link>
+        <Nav.Link onClick={logout} style={{ position: 'absolute', right: 10, top: 10 }} href='/login'>Logout</Nav.Link>
     )
 
     return (
@@ -28,7 +32,7 @@ const NavigationBar = () => {
                 <Container>
                     <Navbar.Brand href='/'><MdConnectingAirports style={{ marginRight: '5px' }} />AirPort</Navbar.Brand>
                     <Nav className='me-auto'>
-                        {localStorage.getItem("username") === null ? guestNavbar() : userNavbar()}
+                        {localStorage.getItem("access_token") === null ? guestNavbar() : userNavbar()}
                     </Nav>
                 </Container>
             </Navbar>
