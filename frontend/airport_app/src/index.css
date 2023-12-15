@@ -7,3 +7,8 @@
     display: flex;
     opacity: 0.9;
   }
+
+  .airport button {
+    width: 250px;
+    height: 50px;
+  }

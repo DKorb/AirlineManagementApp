@@ -26,11 +26,11 @@ public class FlightService {
     }
 
     private FlightDTO convertToDto(Flight flight) {
-        return FlightDTO.builder()
-                .flightNumber(flight.getFlightNumber())
-                .departureAirportId(flight.getDepartureAirport().getId())
-                .arrivalAirportId(flight.getArrivalAirport().getId())
-                .build();
+        return new FlightDTO(
+                flight.getFlightNumber(),
+                flight.getDepartureAirport().getId(),
+                flight.getArrivalAirport().getId()
+                );
     }
 
 
@@ -40,12 +40,12 @@ public class FlightService {
     }
 
     public Flight createFlight(FlightDTO flightDTO) throws AirportNotFoundException {
-        Airport departureAirport = airportService.findAirportById(flightDTO.getDepartureAirportId());
+        Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
 
-        Airport arrivalAirport = airportService.findAirportById(flightDTO.getArrivalAirportId());
+        Airport arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
 
         Flight flight = Flight.builder()
-                .flightNumber(flightDTO.getFlightNumber())
+                .flightNumber(flightDTO.flightNumber())
                 .departureAirport(departureAirport)
                 .arrivalAirport(arrivalAirport)
                 .build();

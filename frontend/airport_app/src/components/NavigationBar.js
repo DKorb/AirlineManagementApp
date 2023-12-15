@@ -1,22 +1,34 @@
 import { Container, Nav, Navbar } from "react-bootstrap"
-import { MdConnectingAirports, MdLogin } from "react-icons/md"
+import { MdConnectingAirports, MdLogin, MdLocalAirport } from "react-icons/md"
 import { BsFillPersonPlusFill } from 'react-icons/bs'
+import { useHistory } from "react-router-dom"
+import { IoIosLogOut } from "react-icons/io"
 
 const NavigationBar = () => {
 
+    const history = useHistory()
+
     const logout = () => {
         localStorage.clear()
-      }
+    }
+
+    const handleAirport = () => {
+        history.push('/airport')
+        window.location.reload(true)
+    }
 
     const guestNavbar = () => (
         <>
-            <Nav.Link style={{ position: 'absolute', right: 10, top: 10 }} href='/register'><BsFillPersonPlusFill style={{ marginRight: '2px'}} />Register</Nav.Link>
-            <Nav.Link style={{ position: 'absolute', right: 110, top: 10 }} href='/login'><MdLogin style={{ marginRight: '2px'}} />Login</Nav.Link>
+            <Nav.Link style={{ position: 'absolute', right: 10, top: 10 }} href='/register'><BsFillPersonPlusFill style={{ marginRight: '2px' }} />Register</Nav.Link>
+            <Nav.Link style={{ position: 'absolute', right: 110, top: 10 }} href='/login'><MdLogin style={{ marginRight: '2px' }} />Login</Nav.Link>
         </>
     )
 
     const userNavbar = () => (
-        <Nav.Link onClick={logout} style={{ position: 'absolute', right: 10, top: 10 }} href='/login'>Logout</Nav.Link>
+        <>
+            <Nav.Link onClick={handleAirport} style={{ marginLeft: '50px' }} href='/airport'><MdLocalAirport style={{ marginRight: '5px' }} />Airports</Nav.Link>
+            <Nav.Link onClick={logout} style={{ position: 'absolute', right: 10, top: 10 }} href='/login'><IoIosLogOut />Logout</Nav.Link>
+        </>
     )
 
     return (
@@ -30,7 +42,7 @@ const NavigationBar = () => {
                 }}
             >
                 <Container>
-                    <Navbar.Brand href='/'><MdConnectingAirports style={{ marginRight: '5px' }} />AirPort</Navbar.Brand>
+                    <Navbar.Brand href='/'><MdConnectingAirports style={{ marginRight: '5px', fontSize: '30px' }} />Pśk Airlines</Navbar.Brand>
                     <Nav className='me-auto'>
                         {localStorage.getItem("access_token") === null ? guestNavbar() : userNavbar()}
                     </Nav>

@@ -32,12 +32,12 @@ public class TicketService {
 
     public Ticket addTicketToUser(TicketDTO ticketDTO, Integer userId) throws FlightNotFoundException {
         User user = userService.findUserById(userId);
-        Flight flight = flightService.findFlightById(ticketDTO.getFlightId());
+        Flight flight = flightService.findFlightById(ticketDTO.flightId());
 
         Ticket ticket = Ticket.builder()
                 .user(user)
                 .flight(flight)
-                .purchaseTime((ticketDTO.getPurchaseTime() != null ? ticketDTO.getPurchaseTime() : LocalDate.now()).atStartOfDay())
+                .purchaseTime((ticketDTO.purchaseTime() != null ? ticketDTO.purchaseTime() : LocalDate.now()).atStartOfDay())
                 .build();
 
         return ticketRepository.save(ticket);

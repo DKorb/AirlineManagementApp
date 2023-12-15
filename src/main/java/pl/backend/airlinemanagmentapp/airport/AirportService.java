@@ -38,9 +38,9 @@ public class AirportService {
         Airport existingAirport = airportRepository.findById(airportId)
                 .orElseThrow(() -> new AirportNotFoundException("Airport with ID " + airportId + " not found"));
 
-        existingAirport.setName(updateAirportDTO.getName());
-        existingAirport.setCity(updateAirportDTO.getCity());
-        existingAirport.setCountry(updateAirportDTO.getCountry());
+        existingAirport.setName(updateAirportDTO.name());
+        existingAirport.setCity(updateAirportDTO.city());
+        existingAirport.setCountry(updateAirportDTO.country());
 
         Airport updatedAirport = airportRepository.save(existingAirport);
         return convertToDto(updatedAirport);
@@ -51,11 +51,12 @@ public class AirportService {
     }
 
     private AirportDTO convertToDto(Airport airport) {
-        return AirportDTO.builder()
-                .code(airport.getCode())
-                .name(airport.getName())
-                .city(airport.getCity())
-                .country(airport.getCountry())
-                .build();
+        return new AirportDTO(
+                airport.getId(),
+                airport.getCode(),
+                airport.getName(),
+                airport.getCity(),
+                airport.getCountry()
+        );
     }
 }

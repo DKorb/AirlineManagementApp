@@ -6,13 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.airport.dto.UpdateAirportDTO;
-import pl.backend.airlinemanagmentapp.exceptions.AirportNotFoundException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/airports")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class AirportController {
 
     private final AirportService airportService;
@@ -43,5 +43,4 @@ public class AirportController {
         airportService.deleteAirport(id);
         return ResponseEntity.ok().build();
     }
-
 }
