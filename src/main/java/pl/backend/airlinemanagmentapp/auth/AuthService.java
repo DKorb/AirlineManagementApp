@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.config.JWTService;
@@ -18,19 +20,20 @@ import pl.backend.airlinemanagmentapp.user.User;
 import pl.backend.airlinemanagmentapp.user.UserService;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserService userService;
     private final TokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthResponse register(RegisterRequest request) {
+
         var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -46,13 +49,18 @@ public class AuthService {
                 .build();
     }
 
-    public AuthResponse authenticate(AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+    public AuthResponse login(AuthRequest request) {
+        log.info("Authenticating user: {}", request.getUsername());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
+        } catch (AuthenticationException ex) {
+            log.error("Authentication failed for user {}: {}", request.getUsername(), ex.getMessage());
+            throw ex;
+        }
+        log.info("Authentication successful for user: {}", request.getUsername());
+
         var user = userService.findUserByEmail(request.getUsername())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);

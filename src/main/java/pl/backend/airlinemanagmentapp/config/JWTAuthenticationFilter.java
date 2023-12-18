@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,17 +17,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import pl.backend.airlinemanagmentapp.token.TokenRepository;
 
 @Component
+@RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
-
-    public JWTAuthenticationFilter(JWTService jwtService, UserDetailsService userDetailsService, TokenRepository tokenRepository) {
-        this.jwtService = jwtService;
-        this.userDetailsService = userDetailsService;
-        this.tokenRepository = tokenRepository;
-    }
 
     @Override
     protected void doFilterInternal(

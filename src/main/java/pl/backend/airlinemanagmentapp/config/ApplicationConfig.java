@@ -1,8 +1,8 @@
 package pl.backend.airlinemanagmentapp.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,6 +16,7 @@ import pl.backend.airlinemanagmentapp.audit.ApplicationAuditAware;
 import pl.backend.airlinemanagmentapp.user.UserRepository;
 
 @Configuration
+@Slf4j
 public class ApplicationConfig {
 
     private final UserRepository userRepository;
