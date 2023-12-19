@@ -8,8 +8,11 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
-
     List<Ticket> findTicketsByUserId(Integer userId);
+
+    Boolean existsByIdAndUserId(Integer ticketId, Integer userId);
+
+    Ticket findTicketByIdAndUserId(Integer ticketId, Integer userId);
 
     @Transactional
     void deleteByIdAndUserId(Integer ticketId, Integer userId);

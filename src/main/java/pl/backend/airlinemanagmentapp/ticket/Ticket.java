@@ -1,10 +1,7 @@
 package pl.backend.airlinemanagmentapp.ticket;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pl.backend.airlinemanagmentapp.flight.Flight;
 import pl.backend.airlinemanagmentapp.user.User;
 
