@@ -6,6 +6,7 @@ import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.airport.dto.UpdateAirportDTO;
 import pl.backend.airlinemanagmentapp.exceptions.AirportNotFoundException;
 import pl.backend.airlinemanagmentapp.exceptions.CustomDuplicateKeyException;
+import pl.backend.airlinemanagmentapp.exceptions.InvalidAirportCodeException;
 
 import java.util.List;
 
@@ -27,8 +28,12 @@ public class AirportService {
     }
 
     public AirportDTO createAirport(Airport airport) {
-        if (airportRepository.existsByCode(airport.getCode())) {
-            throw new CustomDuplicateKeyException("Airport with code " + airport.getCode() + " already exists.");
+        String airportCode = airport.getCode();
+        if (airportCode.length() != 3) {
+            throw new InvalidAirportCodeException(airportCode);
+        }
+        if (airportRepository.existsByCode(airportCode)) {
+            throw new CustomDuplicateKeyException(airportCode);
         }
         Airport savedAirport = airportRepository.save(airport);
         return convertToDto(savedAirport);
@@ -46,9 +51,13 @@ public class AirportService {
         return convertToDto(updatedAirport);
     }
 
-    public void deleteAirport(Integer airportId) {
-        airportRepository.deleteById(airportId);
+    public void deleteAirport(Integer id) {
+        if (!airportRepository.existsById(id)) {
+            throw new AirportNotFoundException("Airport with ID " + id + " does not exist.");
+        }
+        airportRepository.deleteById(id);
     }
+
 
     private AirportDTO convertToDto(Airport airport) {
         return new AirportDTO(

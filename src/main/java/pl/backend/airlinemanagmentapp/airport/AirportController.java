@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.airport.dto.UpdateAirportDTO;
+import pl.backend.airlinemanagmentapp.exceptions.dto.DefaultResponseDTO;
 
 import java.util.List;
 
@@ -39,8 +40,11 @@ public class AirportController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteAirport(@PathVariable Integer id) {
+    public ResponseEntity<DefaultResponseDTO> deleteAirport(@PathVariable Integer id) {
         airportService.deleteAirport(id);
-        return ResponseEntity.ok().build();
+        DefaultResponseDTO successResponseDTO = DefaultResponseDTO.builder()
+                .message("Airport with ID " + id + " has been successfully deleted.")
+                .build();
+        return new ResponseEntity<>(successResponseDTO, HttpStatus.OK);
     }
 }
