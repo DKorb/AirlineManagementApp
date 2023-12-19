@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"test@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"raw": "{\r\n    \"username\": \"test@mail.com\",\r\n    \"firstName\": \"Jan\",\r\n    \"lastName\": \"Nowak\",\r\n    \"password\": \"12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -214,7 +214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"tas\",\r\n    \"name\": \"Example International Airport\",\r\n    \"city\": \"Example City\",\r\n    \"country\": \"Example Country\"\r\n}\r\n",
+							"raw": "{\r\n    \"code\": \"tst\",\r\n    \"name\": \"Example International Airport\",\r\n    \"city\": \"Example City\",\r\n    \"country\": \"Example Country\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -350,7 +350,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/flights/2",
+							"raw": "http://localhost:9090/api/v1/flights/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -360,7 +360,7 @@
 								"api",
 								"v1",
 								"flights",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -383,7 +383,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"flightNumber\": \"AB123\",\r\n    \"departureAirportId\": 3,\r\n    \"arrivalAirportId\": 4\r\n}",
+							"raw": "{\r\n    \"flightNumber\": \"AB123\",\r\n    \"airlineName\": \"PskAirline\",\r\n    \"departureAirportId\": 1,\r\n    \"arrivalAirportId\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -504,7 +504,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"flightId\": 3,\r\n    \"purchaseTime\": \"2023-12-18\"\r\n}\r\n",
+							"raw": "{\r\n    \"flightId\": 1,\r\n    \"purchaseTime\": \"2023-12-18\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -575,7 +575,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/users/1/tickets/3/pdf",
+							"raw": "http://localhost:9090/api/v1/users/1/tickets/1/pdf",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -587,7 +587,7 @@
 								"users",
 								"1",
 								"tickets",
-								"3",
+								"1",
 								"pdf"
 							]
 						}
