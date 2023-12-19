@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponseDTO {
+public class DefaultResponseDTO {
 
     private String message;
 
