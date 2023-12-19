@@ -73,4 +73,4 @@ const FindAirport = () => {
     )
 }
 
-export default FindAirport;
+export default FindAirport

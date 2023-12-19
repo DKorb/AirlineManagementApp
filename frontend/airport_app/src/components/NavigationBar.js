@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar } from "react-bootstrap"
-import { MdConnectingAirports, MdLogin, MdLocalAirport } from "react-icons/md"
+import { MdConnectingAirports, MdLogin, MdLocalAirport, MdFlightTakeoff } from "react-icons/md"
 import { BsFillPersonPlusFill } from 'react-icons/bs'
 import { useHistory } from "react-router-dom"
 import { IoIosLogOut } from "react-icons/io"
@@ -17,6 +17,11 @@ const NavigationBar = () => {
         window.location.reload(true)
     }
 
+    const handleFlight = () => {
+        history.push('/flight')
+        window.location.reload(true)
+    }
+
     const guestNavbar = () => (
         <>
             <Nav.Link style={{ position: 'absolute', right: 10, top: 10 }} href='/register'><BsFillPersonPlusFill style={{ marginRight: '2px' }} />Register</Nav.Link>
@@ -27,6 +32,7 @@ const NavigationBar = () => {
     const userNavbar = () => (
         <>
             <Nav.Link onClick={handleAirport} style={{ marginLeft: '50px' }} href='/airport'><MdLocalAirport style={{ marginRight: '5px' }} />Airports</Nav.Link>
+            <Nav.Link onClick={handleFlight} style={{ marginLeft: '50px' }} href='/flight'><MdFlightTakeoff style={{ marginRight: '5px' }} />Flights</Nav.Link>
             <Nav.Link onClick={logout} style={{ position: 'absolute', right: 10, top: 10 }} href='/login'><IoIosLogOut />Logout</Nav.Link>
         </>
     )

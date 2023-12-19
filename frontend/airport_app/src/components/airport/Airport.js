@@ -19,7 +19,7 @@ const Airport = () => {
     }
 
     return (
-        <div className='airport' style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className='management' style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(3px)', width: '500px' }}>
                 <Form className="d-flex flex-column align-items-center">
                     <h1 style={{ color: 'white', fontSize: '30px', letterSpacing: '4px' }}>AIRPORT MANAGEMENT</h1>

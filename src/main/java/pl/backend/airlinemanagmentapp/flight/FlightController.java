@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/flights")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class FlightController {
 
     private final FlightService flightService;
@@ -32,7 +33,7 @@ public class FlightController {
         return new ResponseEntity<>(flightService.findAllFlights(), HttpStatus.OK);
     }
 
-    @PutMapping("{flightId}")
+    @PutMapping("/{flightId}")
     public ResponseEntity<FlightResponseDTO> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDTO flightDTO) {
         return new ResponseEntity<>(flightService.updateFlight(flightId, flightDTO), HttpStatus.OK);
     }
