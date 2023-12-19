@@ -9,7 +9,6 @@ import pl.backend.airlinemanagmentapp.ticket.TicketService;
 import pl.backend.airlinemanagmentapp.ticket.dto.TicketDTO;
 import pl.backend.airlinemanagmentapp.ticket.dto.TicketResponseDTO;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -44,13 +43,15 @@ public class UserController {
 
     // TODO: działa, ale do poprawki na potem
     @GetMapping("/{userId}/tickets/{ticketId}/pdf")
-    public ResponseEntity<byte[]> generateUserTicket(@PathVariable Integer userId, @PathVariable Integer ticketId) throws IOException {
+    public ResponseEntity<byte[]> generateUserTicket(@PathVariable Integer userId, @PathVariable Integer ticketId) {
         var ticket = ticketService.getTicketByUserIdAndTicketId(userId, ticketId);
-        byte[] pdfContent = fileService.generateTicketPdf(ticket);
+        var pdfContent = fileService.generateTicketPdf(ticket);
 
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.attachment().filename("ticket-" + ticketId + ".pdf").build());
+        headers.setContentDisposition(ContentDisposition.attachment()
+                .filename("ticket-" + ticketId + ".pdf")
+                .build());
 
         return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
     }
