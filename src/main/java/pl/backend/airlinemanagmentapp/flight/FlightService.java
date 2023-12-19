@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.airport.AirportService;
-import pl.backend.airlinemanagmentapp.exceptions.AirportNotFoundException;
+import pl.backend.airlinemanagmentapp.airport.dto.AirportBasicDTO;
 import pl.backend.airlinemanagmentapp.exceptions.FlightNotFoundException;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightDTO;
+import pl.backend.airlinemanagmentapp.flight.dto.FlightResponseDTO;
 
 import java.util.List;
 
@@ -15,50 +16,91 @@ import java.util.List;
 public class FlightService {
 
     private final FlightRepository flightRepository;
-
     private final AirportService airportService;
 
     public List<FlightDTO> findAllFlights() {
-        List<Flight> flights = flightRepository.findAll();
-        return flights.stream()
-                .map(this::convertToDto)
+        return flightRepository.findAll().stream()
+                .map(this::convertToFlightDTO)
                 .toList();
     }
 
-    private FlightDTO convertToDto(Flight flight) {
+    private FlightDTO convertToFlightDTO(Flight flight) {
         return new FlightDTO(
                 flight.getFlightNumber(),
                 flight.getDepartureAirport().getId(),
-                flight.getArrivalAirport().getId()
-                );
+                flight.getArrivalAirport().getId());
     }
 
+    public FlightResponseDTO findFlightByIdd(Integer flightId) {
+        Flight flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
+
+        return convertToFlightResponseDTO(flight);
+    }
 
     public Flight findFlightById(Integer flightId) {
         return flightRepository.findById(flightId)
                 .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
     }
 
-    public Flight createFlight(FlightDTO flightDTO) throws AirportNotFoundException {
-        Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
+    public FlightResponseDTO createFlight(FlightDTO flightDTO) {
+        Flight flight = createFlightEntityFromDTO(flightDTO);
+        Flight savedFlight = flightRepository.save(flight);
+        return convertToFlightResponseDTO(savedFlight);
+    }
 
+    private Flight createFlightEntityFromDTO(FlightDTO flightDTO) {
+        Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
         Airport arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
 
-        Flight flight = Flight.builder()
+        return Flight.builder()
                 .flightNumber(flightDTO.flightNumber())
                 .departureAirport(departureAirport)
                 .arrivalAirport(arrivalAirport)
                 .build();
-
-        return flightRepository.save(flight);
     }
 
-    public Flight updateFlight(Integer flightId) {
+    private FlightResponseDTO convertToFlightResponseDTO(Flight flight) {
+        AirportBasicDTO departureInfo = convertToAirportBasicInfo(flight.getDepartureAirport());
+        AirportBasicDTO arrivalInfo = convertToAirportBasicInfo(flight.getArrivalAirport());
+
+        return new FlightResponseDTO(
+                flight.getId(),
+                flight.getFlightNumber(),
+                departureInfo,
+                arrivalInfo);
+    }
+
+    private AirportBasicDTO convertToAirportBasicInfo(Airport airport) {
+        return new AirportBasicDTO(
+                airport.getId(),
+                airport.getCode(),
+                airport.getName(),
+                airport.getCity(),
+                airport.getCountry());
+    }
+
+    public FlightResponseDTO updateFlight(Integer flightId, FlightDTO flightDTO) {
         Flight existingFlight = findFlightById(flightId);
-        return flightRepository.save(existingFlight);
+
+        existingFlight.setFlightNumber(flightDTO.flightNumber());
+
+        Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
+        existingFlight.setDepartureAirport(departureAirport);
+
+        Airport arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
+        existingFlight.setArrivalAirport(arrivalAirport);
+
+        Flight updatedFlight = flightRepository.save(existingFlight);
+
+        return convertToFlightResponseDTO(updatedFlight);
     }
+
 
     public void deleteFlight(Integer flightId) {
+        if (!flightRepository.existsById(flightId)) {
+            throw new FlightNotFoundException("Flight with ID " + flightId + " not found");
+        }
         flightRepository.deleteById(flightId);
     }
 

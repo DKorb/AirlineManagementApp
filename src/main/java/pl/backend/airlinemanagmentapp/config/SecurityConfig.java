@@ -50,11 +50,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-//                                .requestMatchers(AIRPORT_ENDPOINT).hasAnyRole(USER.name())
-//                                .requestMatchers(GET, AIRPORT_ENDPOINT).permitAll()
-//                                .requestMatchers(POST, AIRPORT_ENDPOINT).hasAnyAuthority(USER.name())
-//                                .requestMatchers(PUT, AIRPORT_ENDPOINT).hasAnyAuthority(USER.name())
-//                                .requestMatchers(DELETE, AIRPORT_ENDPOINT).hasAnyAuthority(USER.name())
                                 .anyRequest()
                                 .authenticated()
                 )

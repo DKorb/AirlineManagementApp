@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.backend.airlinemanagmentapp.exceptions.AirportNotFoundException;
-import pl.backend.airlinemanagmentapp.exceptions.FlightNotFoundException;
+import pl.backend.airlinemanagmentapp.exceptions.dto.DefaultResponseDTO;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightDTO;
+import pl.backend.airlinemanagmentapp.flight.dto.FlightResponseDTO;
 
 import java.util.List;
 
@@ -18,13 +18,13 @@ public class FlightController {
     private final FlightService flightService;
 
     @PostMapping
-    public ResponseEntity<Flight> createFlight(@RequestBody FlightDTO flight) {
+    public ResponseEntity<FlightResponseDTO> createFlight(@RequestBody FlightDTO flight) {
         return new ResponseEntity<>(flightService.createFlight(flight), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Flight> getFlightById(@PathVariable Integer id) {
-        return new ResponseEntity<>(flightService.findFlightById(id), HttpStatus.OK);
+    public ResponseEntity<FlightResponseDTO> getFlightById(@PathVariable Integer id) {
+        return new ResponseEntity<>(flightService.findFlightByIdd(id), HttpStatus.OK);
     }
 
     @GetMapping
@@ -32,15 +32,18 @@ public class FlightController {
         return new ResponseEntity<>(flightService.findAllFlights(), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Flight> updateFlight(@PathVariable Integer id) {
-        return new ResponseEntity<>(flightService.updateFlight(id), HttpStatus.OK);
+    @PutMapping("{flightId}")
+    public ResponseEntity<FlightResponseDTO> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDTO flightDTO) {
+        return new ResponseEntity<>(flightService.updateFlight(flightId, flightDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFlight(@PathVariable Integer id) {
         flightService.deleteFlight(id);
-        return ResponseEntity.ok().build();
+        var deleteResponse = DefaultResponseDTO.builder()
+                .message("Flight with ID " + id + " has been successfully deleted.")
+                .build();
+        return new ResponseEntity<>(deleteResponse, HttpStatus.OK);
     }
 
 }
