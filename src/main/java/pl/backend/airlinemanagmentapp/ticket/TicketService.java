@@ -65,14 +65,20 @@ public class TicketService {
 
     private TicketResponseDTO convertToTicketResponseDTO(Ticket ticket) {
         FlightResponseDTO flightResponse = convertToFlightResponseDTO(ticket.getFlight());
-        UserBasicDTO userResponse = new UserBasicDTO(ticket.getUser().getId(), ticket.getUser().getUsername());
+
+        UserBasicDTO userResponse = new UserBasicDTO(
+                ticket.getUser().getId(),
+                ticket.getUser().getUsername(),
+                ticket.getUser().getFirstName(),
+                ticket.getUser().getLastName());
+
         return new TicketResponseDTO(ticket.getId(), flightResponse, userResponse);
     }
 
     private FlightResponseDTO convertToFlightResponseDTO(Flight flight) {
         AirportBasicDTO departureInfo = convertToAirportBasicInfo(flight.getDepartureAirport());
         AirportBasicDTO arrivalInfo = convertToAirportBasicInfo(flight.getArrivalAirport());
-        return new FlightResponseDTO(flight.getId(), flight.getFlightNumber(), departureInfo, arrivalInfo);
+        return new FlightResponseDTO(flight.getId(), flight.getFlightNumber(), flight.getAirlineName(), departureInfo, arrivalInfo);
     }
 
     private AirportBasicDTO convertToAirportBasicInfo(Airport airport) {

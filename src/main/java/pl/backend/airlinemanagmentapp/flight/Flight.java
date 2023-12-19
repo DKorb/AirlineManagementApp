@@ -25,6 +25,9 @@ public class Flight {
     @Column(nullable = false)
     private String flightNumber;
 
+    @Column(nullable = false)
+    private String airlineName;
+
     @ManyToOne
     @JoinColumn(name = "departure_airport_id", nullable = false)
     private Airport departureAirport;

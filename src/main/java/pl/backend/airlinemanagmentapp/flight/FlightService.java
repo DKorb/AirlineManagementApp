@@ -18,20 +18,13 @@ public class FlightService {
     private final FlightRepository flightRepository;
     private final AirportService airportService;
 
-    public List<FlightDTO> findAllFlights() {
+    public List<FlightResponseDTO> findAllFlights() {
         return flightRepository.findAll().stream()
-                .map(this::convertToFlightDTO)
+                .map(this::convertToFlightResponseDTO)
                 .toList();
     }
 
-    private FlightDTO convertToFlightDTO(Flight flight) {
-        return new FlightDTO(
-                flight.getFlightNumber(),
-                flight.getDepartureAirport().getId(),
-                flight.getArrivalAirport().getId());
-    }
-
-    public FlightResponseDTO findFlightByIdd(Integer flightId) {
+    public FlightResponseDTO findFlightResponseById(Integer flightId) {
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
 
@@ -42,6 +35,7 @@ public class FlightService {
         return flightRepository.findById(flightId)
                 .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
     }
+
 
     public FlightResponseDTO createFlight(FlightDTO flightDTO) {
         Flight flight = createFlightEntityFromDTO(flightDTO);
@@ -55,6 +49,7 @@ public class FlightService {
 
         return Flight.builder()
                 .flightNumber(flightDTO.flightNumber())
+                .airlineName(flightDTO.airlineName())
                 .departureAirport(departureAirport)
                 .arrivalAirport(arrivalAirport)
                 .build();
@@ -67,6 +62,7 @@ public class FlightService {
         return new FlightResponseDTO(
                 flight.getId(),
                 flight.getFlightNumber(),
+                flight.getAirlineName(),
                 departureInfo,
                 arrivalInfo);
     }
@@ -81,7 +77,8 @@ public class FlightService {
     }
 
     public FlightResponseDTO updateFlight(Integer flightId, FlightDTO flightDTO) {
-        Flight existingFlight = findFlightById(flightId);
+        Flight existingFlight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
 
         existingFlight.setFlightNumber(flightDTO.flightNumber());
 

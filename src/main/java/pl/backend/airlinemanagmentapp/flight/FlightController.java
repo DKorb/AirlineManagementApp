@@ -24,11 +24,11 @@ public class FlightController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FlightResponseDTO> getFlightById(@PathVariable Integer id) {
-        return new ResponseEntity<>(flightService.findFlightByIdd(id), HttpStatus.OK);
+        return new ResponseEntity<>(flightService.findFlightResponseById(id), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<FlightDTO>> getAllFlights() {
+    public ResponseEntity<List<FlightResponseDTO>> getAllFlights() {
         return new ResponseEntity<>(flightService.findAllFlights(), HttpStatus.OK);
     }
 
