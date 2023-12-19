@@ -41,17 +41,10 @@
 					"response": []
 				},
 				{
-					"name": "user - refresh",
+					"name": "user - login",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwiaWF0IjoxNzAyMTI4OTQwLCJleHAiOjE3MDI3MzM3NDB9.MS39OH9qeIFDxvRMS72hdVXb3uRGtYwqCjx2688jfik",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
@@ -65,7 +58,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/v1/auth/authenticate",
+							"raw": "http://localhost:9090/api/v1/auth/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -75,7 +68,89 @@
 								"api",
 								"v1",
 								"auth",
-								"authenticate"
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user - logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwiaWF0IjoxNzAyOTExNTUyLCJleHAiOjE3MDI5OTc5NTJ9.4KOsXHHr3Gp35hS03Zpn6P_sQ9FMQLCe5eQCabxOLxY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/v1/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user - refresh",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwiaWF0IjoxNzAyOTExNTcxLCJleHAiOjE3MDI5OTc5NzF9.yFExxlZQcPw_nN0GJ_X8i39OtLwnhctJPfxO6e8x4qo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/v1/auth/refresh-token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"refresh-token"
 							]
 						}
 					},
@@ -133,20 +208,13 @@
 					"name": "airport - createAirport",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"tsts\",\r\n    \"name\": \"Example International Airport\",\r\n    \"city\": \"Example City\",\r\n    \"country\": \"Example Country\"\r\n}\r\n",
+							"raw": "{\r\n    \"code\": \"tas\",\r\n    \"name\": \"Example International Airport\",\r\n    \"city\": \"Example City\",\r\n    \"country\": \"Example Country\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -173,20 +241,13 @@
 					"name": "airport - updateAirport",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"XYZ\",\r\n    \"name\": \"Updated Example International Airport\",\r\n    \"city\": \"Updated Example City\",\r\n    \"country\": \"Updated Example Country\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Updated Example International Airport\",\r\n    \"city\": \"Updated Example City\",\r\n    \"country\": \"Updated Example Country\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -194,7 +255,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/v1/airports?id=1",
+							"raw": "http://localhost:9090/api/v1/airports/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -203,13 +264,8 @@
 							"path": [
 								"api",
 								"v1",
-								"airports"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"airports",
+								"1"
 							]
 						}
 					},
@@ -220,17 +276,8 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"XYZ\",\r\n    \"name\": \"Updated Example International Airport\",\r\n    \"city\": \"Updated Example City\",\r\n    \"country\": \"Updated Example Country\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:9090/api/v1/airports?id=1",
+							"raw": "http://localhost:9090/api/v1/airports/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -239,13 +286,8 @@
 							"path": [
 								"api",
 								"v1",
-								"airports"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"airports",
+								"2"
 							]
 						}
 					},
@@ -303,19 +345,12 @@
 					"name": "flight - getFlightById",
 					"request": {
 						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
+							"type": "noauth"
 						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/flights/1",
+							"raw": "http://localhost:9090/api/v1/flights/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -325,7 +360,7 @@
 								"api",
 								"v1",
 								"flights",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -348,7 +383,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"flightNumber\": \"AB123\",\r\n    \"departureAirportId\": 1,\r\n    \"arrivalAirportId\": 2\r\n}",
+							"raw": "{\r\n    \"flightNumber\": \"AB123\",\r\n    \"departureAirportId\": 3,\r\n    \"arrivalAirportId\": 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -378,7 +413,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"XYZ\",\r\n    \"name\": \"Updated Example International Airport\",\r\n    \"city\": \"Updated Example City\",\r\n    \"country\": \"Updated Example Country\"\r\n}",
+							"raw": "{\r\n    \"flightNumber\": \"tst\",\r\n    \"departureAirportId\": 3,\r\n    \"arrivalAirportId\": 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -386,7 +421,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/v1/flights",
+							"raw": "http://localhost:9090/api/v1/flights/3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -395,7 +430,8 @@
 							"path": [
 								"api",
 								"v1",
-								"flights"
+								"flights",
+								"3"
 							]
 						}
 					},
@@ -406,17 +442,8 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"code\": \"XYZ\",\r\n    \"name\": \"Updated Example International Airport\",\r\n    \"city\": \"Updated Example City\",\r\n    \"country\": \"Updated Example Country\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:9090/api/v1/flights?id=1",
+							"raw": "http://localhost:9090/api/v1/flights/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -425,13 +452,8 @@
 							"path": [
 								"api",
 								"v1",
-								"flights"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"flights",
+								"1"
 							]
 						}
 					},
@@ -440,45 +462,49 @@
 			]
 		},
 		{
-			"name": "ticket",
+			"name": "user",
 			"item": [
 				{
-					"name": "ticket  - getUserTickets",
+					"name": "user  - getUserTickets",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/:userId/tickets",
+							"raw": "http://localhost:9090/api/v1/users/1/tickets",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "9090",
 							"path": [
 								"api",
 								"v1",
 								"users",
-								":userId",
+								"1",
 								"tickets"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "ticket - addTicketToUser",
+					"name": "user - addTicketToUser",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwiaWF0IjoxNzAyOTc3Nzk5LCJleHAiOjE3MDMwNjQxOTl9.ifgjqrvmksgqfnwGMnMuWih5NMVGIKFBxPTRT_NcmWM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"flightId\": 1,\r\n    \"purchaseTime\": \"2023-12-10\"\r\n}\r\n",
+							"raw": "{\r\n    \"flightId\": 3,\r\n    \"purchaseTime\": \"2023-12-18\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -486,48 +512,51 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/:userId/tickets",
+							"raw": "http://localhost:9090/api/v1/users/1/tickets",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "9090",
 							"path": [
 								"api",
 								"v1",
 								"users",
-								":userId",
+								"1",
 								"tickets"
-							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": "1"
-								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "ticket - deleteUserTicket",
+					"name": "user - deleteUserTicket",
 					"request": {
 						"method": "DELETE",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8080/api/v1/users/:userId/tickets/:ticketId",
+							"raw": "http://localhost:9090/api/v1/users/1/tickets/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "9090",
 							"path": [
 								"api",
 								"v1",
 								"users",
-								":userId",
+								"1",
 								"tickets",
-								":ticketId"
+								"2"
 							],
 							"query": [
 								{
@@ -535,16 +564,31 @@
 									"value": null,
 									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user - generate ticket",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/v1/users/1/tickets/3/pdf",
+							"protocol": "http",
+							"host": [
+								"localhost"
 							],
-							"variable": [
-								{
-									"key": "userId",
-									"value": ""
-								},
-								{
-									"key": "ticketId",
-									"value": ""
-								}
+							"port": "9090",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"1",
+								"tickets",
+								"3",
+								"pdf"
 							]
 						}
 					},
