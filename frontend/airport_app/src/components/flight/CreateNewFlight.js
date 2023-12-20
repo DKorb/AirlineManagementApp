@@ -12,6 +12,7 @@ const CreateNewFlight = () => {
 
     const [formData, setFormData] = useState({
         flightNumber: '',
+        airlineName: '',
         departureAirportId: null,
         arrivalAirportId: null
     })
@@ -61,6 +62,9 @@ const CreateNewFlight = () => {
                     <h1 className="mb-4" style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ADD NEW FLIGHT</h1>
                     <Form.Group className="mb-3" controlId="formGroupFlightNumber">
                         <Form.Control required style={{ width: '450px' }} type="text" name="flightNumber" value={formData.flightNumber} placeholder="Enter flight number" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupAirlineName">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="airlineName" value={formData.airlineName} placeholder="Enter airline name" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupDepartureAirportId">
                         <Form.Control required style={{ width: '450px' }} type="number" name="departureAirportId" value={formData.departureAirportId} placeholder="Enter departure airport" onChange={handleChange} />

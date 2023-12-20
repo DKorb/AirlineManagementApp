@@ -72,8 +72,8 @@ const UpdateAirport = () => {
         <div style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(3px)', width: '600px' }}>
                 <Form className="d-flex flex-column align-items-center" onSubmit={handleEditAirport}>
-                    {errors && <Alert color='danger' style={{ marginTop: '10px', textAlign: 'center' }}>{errors}</Alert>}
-                    {success && <Alert variant='success' style={{ marginTop: '10px', textAlign: 'center' }}>{success}</Alert>}
+                    {errors && <Alert color='danger' style={{ width: '100%', marginTop: '10px', textAlign: 'center' }}>{errors}</Alert>}
+                    {success && <Alert variant='success' style={{ width: '100%', marginTop: '10px', textAlign: 'center' }}>{success}</Alert>}
                     <h1 className="mb-4" style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>EDIT AIRPORT</h1>
                     <Form.Group className="mb-3" controlId="formGroupName">
                         <Form.Control required style={{ width: '450px' }} type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" />

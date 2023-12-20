@@ -11,6 +11,8 @@ const RegisterForm = () => {
     const [errors, setErrors] = useState('')
 
     const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
         username: '',
         email: '',
         password: ''
@@ -54,6 +56,12 @@ const RegisterForm = () => {
                     {errors && <Alert style={{ width: '100%', textAlign: 'center' }} variant='danger'>{errors}</Alert>}
                     {success && <Alert style={{ width: '100%', textAlign: 'center' }} variant='success'>{success}</Alert>}
                     <h1 className="mb-4" style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>SIGN UP</h1>
+                    <Form.Group className="mb-3" controlId="formGroupFirstName">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="firstName" value={formData.firstName} placeholder="Enter first name" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupLastName">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="lastName" value={formData.lastName} placeholder="Enter last name" onChange={handleChange} />
+                    </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupUsername">
                         <Form.Control required style={{ width: '450px' }} type="text" name="username" value={formData.username} placeholder="Enter username" onChange={handleChange} />
                     </Form.Group>
