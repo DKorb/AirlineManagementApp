@@ -1,25 +1,35 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, InputGroup, Offcanvas } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { FaSearch } from "react-icons/fa"
 
 const Body = () => {
 
-    const [searchTerm, setSearchTerm] = useState('')
+    const [searchTerm, setSearchTerm] = useState(null)
     const [flightData, setFlightData] = useState(null)
     const [show, setShow] = useState(false)
     const [error, setError] = useState(null)
+    const [flight, setFlight] = useState([])
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
 
+    useEffect(() => {
+        fetch('http://localhost:9090/api/v1/flights')
+            .then(response => response.json())
+            .then(data => setFlight(data))
+            .catch(error => console.error('Error fetching flights:', error))
+    }, [])
+
     const handleSearch = () => {
-        fetch(`http://localhost:9090/api/v1/flights/${searchTerm}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Invalid flight ID. Please enter a valid ID.')
-                }
-                return response.json()
-            })
+        const selectedFlightId = searchTerm
+
+        if (!selectedFlightId) {
+            setError('Please select a flight from the list.')
+            return;
+        }
+
+        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightId}`)
+            .then(response => response.json())
             .then(data => {
                 setFlightData(data)
                 handleShow()
@@ -39,13 +49,20 @@ const Body = () => {
                     {error && <p style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
                     <InputGroup className="mb-3">
                         <FaSearch style={{ color: 'white', fontSize: '30px', marginRight: '10px', marginTop: '5px' }} />
-                        <Form.Control
-                            placeholder="Find flight (enter ID)"
-                            aria-label="Find flight"
+                        <Form.Select
+                            placeholder="Select flight"
+                            aria-label="Select flight"
                             aria-describedby="basic-addon2"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                        >
+                            <option value="">Select a flight</option>
+                            {flight.map(flight => (
+                                <option key={flight.id} value={flight.id}>
+                                    {flight.flightNumber} - {flight.departureAirport.id} to {flight.arrivalAirport.id}
+                                </option>
+                            ))}
+                        </Form.Select>
                         <Button variant="primary" id="button-addon2" onClick={handleSearch}>
                             Search
                         </Button>
@@ -69,7 +86,7 @@ const Body = () => {
                 </Form>
             </div>
         </div>
-    );
+    )
 }
 
-export default Body;
+export default Body
