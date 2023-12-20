@@ -82,6 +82,8 @@ public class FlightService {
 
         existingFlight.setFlightNumber(flightDTO.flightNumber());
 
+        existingFlight.setAirlineName(flightDTO.airlineName());
+
         Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
         existingFlight.setDepartureAirport(departureAirport);
 

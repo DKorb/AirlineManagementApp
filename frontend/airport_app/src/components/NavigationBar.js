@@ -1,5 +1,5 @@
 import { Container, Nav, Navbar } from "react-bootstrap"
-import { MdConnectingAirports, MdLogin, MdLocalAirport, MdFlightTakeoff } from "react-icons/md"
+import { MdConnectingAirports, MdLogin, MdLocalAirport, MdFlightTakeoff, MdAirplaneTicket } from "react-icons/md"
 import { BsFillPersonPlusFill } from 'react-icons/bs'
 import { useHistory } from "react-router-dom"
 import { IoIosLogOut } from "react-icons/io"
@@ -8,8 +8,27 @@ const NavigationBar = () => {
 
     const history = useHistory()
 
-    const logout = () => {
-        localStorage.clear()
+    const logout = async () => {
+        try {
+            const response = await fetch('/api/v1/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if (response.ok) {
+                setTimeout(() => {
+                    history.push('/login')
+                    window.location.reload(true)
+                }, 1500)
+            } else {
+               console.log("Error while logout") 
+            }
+        } catch (error) {
+            console.error('Error while logout ', error)
+        } finally {
+            localStorage.clear();
+        }
     }
 
     const handleAirport = () => {
@@ -19,6 +38,11 @@ const NavigationBar = () => {
 
     const handleFlight = () => {
         history.push('/flight')
+        window.location.reload(true)
+    }
+
+    const handleTicket = () => {
+        history.push('/ticket')
         window.location.reload(true)
     }
 
@@ -33,6 +57,7 @@ const NavigationBar = () => {
         <>
             <Nav.Link onClick={handleAirport} style={{ marginLeft: '50px' }} href='/airport'><MdLocalAirport style={{ marginRight: '5px' }} />Airports</Nav.Link>
             <Nav.Link onClick={handleFlight} style={{ marginLeft: '50px' }} href='/flight'><MdFlightTakeoff style={{ marginRight: '5px' }} />Flights</Nav.Link>
+            <Nav.Link onClick={handleTicket} style={{ marginLeft: '50px' }} href='/ticket'><MdAirplaneTicket  style={{ marginRight: '5px' }} />Tickets</Nav.Link>
             <Nav.Link onClick={logout} style={{ position: 'absolute', right: 10, top: 10 }} href='/login'><IoIosLogOut />Logout</Nav.Link>
         </>
     )

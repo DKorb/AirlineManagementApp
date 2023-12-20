@@ -13,6 +13,11 @@ import CreateNewFlight from './components/flight/CreateNewFlight'
 import ShowAllFlights from './components/flight/ShowAllFlights'
 import UpdateFlight from './components/flight/UpdateFlight'
 import FindFlight from './components/flight/FindFlight'
+import Ticket from './components/ticket/Ticket'
+import CreateNewTicket from './components/ticket/CreateNewTicket'
+import FindTicket from './components/ticket/FindTicket'
+import DeleteTicket from './components/ticket/DeleteTicket'
+import GenerateTicket from './components/ticket/GenerateTicket'
 
 function App() {
   return (
@@ -33,6 +38,11 @@ function App() {
         <Route path="/all-flights" component={ShowAllFlights} />
         <Route path="/edit-flight/:id" component={UpdateFlight} />
         <Route path="/find-flight" component={FindFlight} />
+        <Route path="/ticket" component={Ticket} />
+        <Route path="/create-ticket" component={CreateNewTicket} />
+        <Route path="/find-ticket" component={FindTicket} />
+        <Route path="/remove-ticket" component={DeleteTicket} />
+        <Route path="/generate-ticket" component={GenerateTicket} />
       </Switch>
     </Router>
   )

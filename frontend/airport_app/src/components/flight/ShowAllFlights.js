@@ -66,8 +66,9 @@ const ShowAllFlights = () => {
                 <thead>
                     <tr>
                         <th>Flight number</th>
-                        <th>Departure airport</th>
-                        <th>Arrival airport</th>
+                        <th>Airline name</th>
+                        <th>Departure airport name (code)</th>
+                        <th>Arrival airport name (code)</th>
                         <th style={{ width: '155px' }}>Actions</th>
                     </tr>
                 </thead>
@@ -75,8 +76,9 @@ const ShowAllFlights = () => {
                     {flights.map(flight => (
                         <tr key={flight.id}>
                             <td>{flight.flightNumber}</td>
-                            <td>{flight.departureAirportId}</td>
-                            <td>{flight.arrivalAirportId}</td>
+                            <td>{flight.airlineName}</td>
+                            <td>{flight.departureAirport.name} ({flight.departureAirport.code})</td>
+                            <td>{flight.arrivalAirport.name} ({flight.arrivalAirport.code})</td>
                             <td>
                                 <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleEditFlight(flight.id)}>
                                     Edit
