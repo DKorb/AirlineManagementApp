@@ -19,10 +19,17 @@ public class UserController {
 
     private final TicketService ticketService;
 
-    @GetMapping("/{userId}/tickets")
-    public ResponseEntity<List<TicketResponseDTO>> getUserTickets(@PathVariable Integer userId) {
-        List<TicketResponseDTO> tickets = ticketService.getTicketsByUserId(userId);
+    private final FileService fileService;
+
+    @GetMapping("/{username}/tickets")
+    public ResponseEntity<List<TicketResponseDTO>> getUserTickets(@PathVariable String username) {
+        List<TicketResponseDTO> tickets = ticketService.getTicketsByUsername(username);
         return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("tickets")
+    public ResponseEntity<List<TicketResponseDTO>> getAllTickets() {
+        return new ResponseEntity<>(ticketService.getAllTickets(), HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/tickets")
@@ -40,9 +47,6 @@ public class UserController {
         return new ResponseEntity<>(deleteResponse, HttpStatus.OK);
     }
 
-    private final FileService fileService;
-
-    // TODO: działa, ale do poprawki na potem
     @GetMapping("/{userId}/tickets/{ticketId}/pdf")
     public ResponseEntity<byte[]> generateUserTicket(@PathVariable Integer userId, @PathVariable Integer ticketId) {
         var ticket = ticketService.getTicketByUserIdAndTicketId(userId, ticketId);

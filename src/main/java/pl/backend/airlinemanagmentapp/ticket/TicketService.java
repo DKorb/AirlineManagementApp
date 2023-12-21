@@ -26,9 +26,15 @@ public class TicketService {
     private final FlightService flightService;
     private final UserService userService;
 
-    public List<TicketResponseDTO> getTicketsByUserId(Integer userId) {
-        List<Ticket> tickets = ticketRepository.findTicketsByUserId(userId);
+    public List<TicketResponseDTO> getTicketsByUsername(String username) {
+        List<Ticket> tickets = ticketRepository.findTicketsByUserUsername(username);
         return tickets.stream()
+                .map(this::convertToTicketResponseDTO)
+                .toList();
+    }
+
+    public List<TicketResponseDTO> getAllTickets() {
+        return ticketRepository.findAll().stream()
                 .map(this::convertToTicketResponseDTO)
                 .toList();
     }

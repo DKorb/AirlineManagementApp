@@ -25,27 +25,27 @@ public class FlightService {
     }
 
     public FlightResponseDTO findFlightResponseById(Integer flightId) {
-        Flight flight = flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
+        var flight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new FlightNotFoundException(flightId));
 
         return convertToFlightResponseDTO(flight);
     }
 
     public Flight findFlightById(Integer flightId) {
         return flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
+                .orElseThrow(() -> new FlightNotFoundException(flightId));
     }
 
 
     public FlightResponseDTO createFlight(FlightDTO flightDTO) {
-        Flight flight = createFlightEntityFromDTO(flightDTO);
-        Flight savedFlight = flightRepository.save(flight);
+        var flight = createFlightEntityFromDTO(flightDTO);
+        var savedFlight = flightRepository.save(flight);
         return convertToFlightResponseDTO(savedFlight);
     }
 
     private Flight createFlightEntityFromDTO(FlightDTO flightDTO) {
-        Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
-        Airport arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
+        var departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
+        var arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
 
         return Flight.builder()
                 .flightNumber(flightDTO.flightNumber())
@@ -56,8 +56,8 @@ public class FlightService {
     }
 
     private FlightResponseDTO convertToFlightResponseDTO(Flight flight) {
-        AirportBasicDTO departureInfo = convertToAirportBasicInfo(flight.getDepartureAirport());
-        AirportBasicDTO arrivalInfo = convertToAirportBasicInfo(flight.getArrivalAirport());
+        var departureInfo = convertToAirportBasicInfo(flight.getDepartureAirport());
+        var arrivalInfo = convertToAirportBasicInfo(flight.getArrivalAirport());
 
         return new FlightResponseDTO(
                 flight.getId(),
@@ -77,20 +77,19 @@ public class FlightService {
     }
 
     public FlightResponseDTO updateFlight(Integer flightId, FlightDTO flightDTO) {
-        Flight existingFlight = flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException("Flight with ID " + flightId + " not found"));
+        var existingFlight = flightRepository.findById(flightId)
+                .orElseThrow(() -> new FlightNotFoundException(flightId));
 
         existingFlight.setFlightNumber(flightDTO.flightNumber());
-
         existingFlight.setAirlineName(flightDTO.airlineName());
 
-        Airport departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
+        var departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
         existingFlight.setDepartureAirport(departureAirport);
 
-        Airport arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
+        var arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
         existingFlight.setArrivalAirport(arrivalAirport);
 
-        Flight updatedFlight = flightRepository.save(existingFlight);
+        var updatedFlight = flightRepository.save(existingFlight);
 
         return convertToFlightResponseDTO(updatedFlight);
     }
@@ -98,7 +97,7 @@ public class FlightService {
 
     public void deleteFlight(Integer flightId) {
         if (!flightRepository.existsById(flightId)) {
-            throw new FlightNotFoundException("Flight with ID " + flightId + " not found");
+            throw new FlightNotFoundException(flightId);
         }
         flightRepository.deleteById(flightId);
     }

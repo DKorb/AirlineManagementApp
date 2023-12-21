@@ -14,6 +14,7 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import pl.backend.airlinemanagmentapp.user.User;
 
 @Service
 public class JWTService {
@@ -35,7 +36,13 @@ public class JWTService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> claims = new HashMap<>();
+
+        if (userDetails instanceof User user) {
+            claims.put("userId", user.getId());
+        }
+
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(
