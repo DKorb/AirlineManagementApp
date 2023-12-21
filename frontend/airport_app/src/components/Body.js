@@ -9,6 +9,7 @@ const Body = () => {
     const [flightData, setFlightData] = useState(null)
     const [show, setShow] = useState(false)
     const [error, setError] = useState(null)
+    const [success, setSuccess] = useState(null)
     const [flight, setFlight] = useState([])
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
@@ -25,7 +26,7 @@ const Body = () => {
 
         if (!selectedFlightId) {
             setError('Please select a flight from the list.')
-            return;
+            return
         }
 
         fetch(`http://localhost:9090/api/v1/flights/${selectedFlightId}`)
@@ -41,12 +42,48 @@ const Body = () => {
             })
     }
 
+    const handleTicket = () => {
+        const selectedFlightId = searchTerm
+        const userId = localStorage.getItem("user_id")
+        const accessToken = localStorage.getItem("access_token")
+
+        if (!userId) {
+            setError('User not logged in.')
+            return
+        }
+
+        if (!selectedFlightId) {
+            setError('Please select a flight from the list.')
+            return
+        }
+
+        fetch(`http://localhost:9090/api/v1/users/${userId}/tickets`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,  
+            },
+            body: JSON.stringify({
+                flightId: selectedFlightId,
+                purchaseTime: new Date().toISOString(), 
+            }),
+        })
+            .then(response => response.json())
+            .then(() => {
+                setSuccess('You bought the ticket for this flight')
+                handleClose()
+            })
+            .catch(error => {
+                setError(error.message)
+            })
+    }
     return (
         <div style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(3px)', width: '700px' }}>
                 <h1 style={{ color: 'white', fontSize: '30px', letterSpacing: '3px' }}>PŚK AIRLINES</h1>
                 <Form className="d-flex flex-column align-items-center">
                     {error && <p style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
+                    {success && <p style={{ color: 'green', marginTop: '5px' }}>{success}</p>}
                     <InputGroup className="mb-3">
                         <FaSearch style={{ color: 'white', fontSize: '30px', marginRight: '10px', marginTop: '5px' }} />
                         <Form.Select
@@ -59,7 +96,7 @@ const Body = () => {
                             <option value="">Select a flight</option>
                             {flight.map(flight => (
                                 <option key={flight.id} value={flight.id}>
-                                    {flight.flightNumber} - {flight.departureAirport.id} to {flight.arrivalAirport.id}
+                                    {flight.flightNumber} - {flight.departureAirport.name} to {flight.arrivalAirport.name}
                                 </option>
                             ))}
                         </Form.Select>
@@ -74,12 +111,24 @@ const Body = () => {
                                 {flightData ? (
                                     <>
                                         <p><b>Flight number:</b> {flightData.flightNumber}</p>
-                                        <p><b>Departure airport:</b> {flightData.departureAirport.id}</p>
-                                        <p><b>Arrival airport:</b> {flightData.arrivalAirport.id}</p>
+                                        <p><b>Airline name:</b> {flightData.airlineName}</p>
+                                        <Offcanvas.Title>DEPARTURE AIRPORT</Offcanvas.Title>
+                                        <p><b>Departure airport code:</b> {flightData.departureAirport.code}</p>
+                                        <p><b>Departure airport name:</b> {flightData.departureAirport.name}</p>
+                                        <p><b>Departure airport city:</b> {flightData.departureAirport.city}</p>
+                                        <p><b>Departure airport country:</b> {flightData.departureAirport.country}</p>
+                                        <Offcanvas.Title>ARRIVAL AIRPORT</Offcanvas.Title>
+                                        <p><b>Arrival airport code:</b> {flightData.arrivalAirport.code}</p>
+                                        <p><b>Arrival airport name:</b> {flightData.arrivalAirport.name}</p>
+                                        <p><b>Arrival airport city:</b> {flightData.arrivalAirport.city}</p>
+                                        <p><b>Arrival airport country:</b> {flightData.arrivalAirport.country}</p>
                                     </>
                                 ) : (
                                     <p>Loading...</p>
                                 )}
+                                <Button variant="success" id="button-addon2" onClick={handleTicket}>
+                                    Buy ticket
+                                </Button>
                             </Offcanvas.Body>
                         </Offcanvas>
                     </InputGroup>

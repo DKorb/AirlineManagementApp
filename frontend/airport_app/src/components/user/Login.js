@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom"
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Alert } from "react-bootstrap"
+import { jwtDecode } from "jwt-decode"
 
 const Login = () => {
 
@@ -38,8 +39,11 @@ const Login = () => {
                 const accessToken = responseData.access_token
                 const refreshToken = responseData.refresh_token
 
+                const decoded = jwtDecode(accessToken)
+
                 localStorage.setItem("access_token", accessToken)
                 localStorage.setItem("refresh_token", refreshToken)
+                localStorage.setItem("user_id", decoded.userId)
                 
                 setSuccess('You are logged in')
                 setTimeout(() => {

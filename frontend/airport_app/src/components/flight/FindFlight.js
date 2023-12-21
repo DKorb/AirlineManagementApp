@@ -67,7 +67,7 @@ const FindFlight = () => {
                             <option value="">Select a flight</option>
                             {flight.map(flight => (
                                 <option key={flight.id} value={flight.id}>
-                                    {flight.flightNumber} - {flight.departureAirport.id} to {flight.arrivalAirport.id}
+                                    {flight.flightNumber} - {flight.departureAirport.name} to {flight.arrivalAirport.name}
                                 </option>
                             ))}
                         </Form.Select>
@@ -82,8 +82,8 @@ const FindFlight = () => {
                                 {flightData ? (
                                     <>
                                         <p><b>Flight number:</b> {flightData.flightNumber}</p>
-                                        <p><b>Departure airport:</b> {flightData.departureAirport.id}</p>
-                                        <p><b>Arrival airport:</b> {flightData.arrivalAirport.id}</p>
+                                        <p><b>Departure airport:</b> {flightData.departureAirport.name}</p>
+                                        <p><b>Arrival airport:</b> {flightData.arrivalAirport.name}</p>
                                     </>
                                 ) : (
                                     <p>Loading...</p>
