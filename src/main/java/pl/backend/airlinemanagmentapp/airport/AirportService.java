@@ -18,13 +18,19 @@ public class AirportService {
 
     public List<AirportDTO> findAllAirports() {
         return airportRepository.findAll().stream()
-                .map(this::convertToDto)
+                .map(this::convertToAirportDto)
                 .toList();
     }
 
-    public Airport findAirportById(Integer id) {
-        return airportRepository.findById(id)
-                .orElseThrow(() -> new AirportNotFoundException("Airport with ID " + id + " not found"));
+    public Airport fetchAirportById(Integer airportId) {
+        return airportRepository.findById(airportId)
+                .orElseThrow(() -> new AirportNotFoundException(airportId));
+    }
+
+    public AirportDTO findAirportById(Integer airportId) {
+        return airportRepository.findById(airportId)
+                .map(this::convertToAirportDto)
+                .orElseThrow(() -> new AirportNotFoundException(airportId));
     }
 
     public AirportDTO createAirport(Airport airport) {
@@ -36,30 +42,30 @@ public class AirportService {
             throw new CustomDuplicateKeyException(airportCode);
         }
         Airport savedAirport = airportRepository.save(airport);
-        return convertToDto(savedAirport);
+        return convertToAirportDto(savedAirport);
     }
 
     public AirportDTO updateAirport(Integer airportId, UpdateAirportDTO updateAirportDTO) {
         Airport existingAirport = airportRepository.findById(airportId)
-                .orElseThrow(() -> new AirportNotFoundException("Airport with ID " + airportId + " not found"));
+                .orElseThrow(() -> new AirportNotFoundException(airportId));
 
         existingAirport.setName(updateAirportDTO.name());
         existingAirport.setCity(updateAirportDTO.city());
         existingAirport.setCountry(updateAirportDTO.country());
 
         Airport updatedAirport = airportRepository.save(existingAirport);
-        return convertToDto(updatedAirport);
+        return convertToAirportDto(updatedAirport);
     }
 
-    public void deleteAirport(Integer id) {
-        if (!airportRepository.existsById(id)) {
-            throw new AirportNotFoundException("Airport with ID " + id + " does not exist.");
+    public void deleteAirport(Integer airportId) {
+        if (!airportRepository.existsById(airportId)) {
+            throw new AirportNotFoundException(airportId);
         }
-        airportRepository.deleteById(id);
+        airportRepository.deleteById(airportId);
     }
 
 
-    private AirportDTO convertToDto(Airport airport) {
+    private AirportDTO convertToAirportDto(Airport airport) {
         return new AirportDTO(
                 airport.getId(),
                 airport.getCode(),
