@@ -50,7 +50,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"test@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"raw": "{\r\n    \"username\": \"jkowalski@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -342,7 +342,7 @@
 					"response": []
 				},
 				{
-					"name": "flight - getFlightById",
+					"name": "flight - getFlightByFlightNumber",
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -350,7 +350,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/flights/1",
+							"raw": "http://localhost:9090/api/v1/flights/LO308",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -360,7 +360,7 @@
 								"api",
 								"v1",
 								"flights",
-								"1"
+								"LO308"
 							]
 						}
 					},
@@ -383,7 +383,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"flightNumber\": \"AB123\",\r\n    \"airlineName\": \"PskAirline\",\r\n    \"departureAirportId\": 1,\r\n    \"arrivalAirportId\": 2\r\n}",
+							"raw": "{\r\n    \"flightNumber\": \"AB123\",\r\n    \"airlineName\": \"PskAirline\",\r\n    \"departureAirportId\": 1,\r\n    \"arrivalAirportId\": 2,\r\n    \"departureTime\": \"2023-12-10 08:30:00\",\r\n    \"arrivalTime\": \"2023-12-10 11:05:00\",\r\n    \"flightStatus\": \"SCHEDULED\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -413,35 +413,13 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"flightNumber\": \"tst\",\r\n    \"departureAirportId\": 3,\r\n    \"arrivalAirportId\": 4\r\n}",
+							"raw": "{\r\n    \"flightNumber\": \"asd\",\r\n    \"airlineName\": \"cos tam\",\r\n    \"departureAirportId\": 1,\r\n    \"arrivalAirportId\": 2,\r\n    \"departureTime\": \"2023-12-10 08:30:00\",\r\n    \"arrivalTime\": \"2023-12-10 12:30:00\",\r\n    \"flightStatus\": \"SCHEDULED\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost:9090/api/v1/flights/3",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "9090",
-							"path": [
-								"api",
-								"v1",
-								"flights",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "flight - deleteFlight",
-					"request": {
-						"method": "DELETE",
-						"header": [],
 						"url": {
 							"raw": "http://localhost:9090/api/v1/flights/1",
 							"protocol": "http",
@@ -458,6 +436,59 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "flight - changeStatus",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"flightStatus\": \"IN_AIR\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9090/api/v1/flights/LO308",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"LO308"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "flight - deleteFlight",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/v1/flights/LO308",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"LO308"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -470,7 +501,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/users/1/tickets",
+							"raw": "http://localhost:9090/api/v1/users/jkowalski/tickets",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -480,7 +511,29 @@
 								"api",
 								"v1",
 								"users",
-								"1",
+								"jkowalski",
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user  - getAllTickets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9090/api/v1/users/tickets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9090",
+							"path": [
+								"api",
+								"v1",
+								"users",
 								"tickets"
 							]
 						}
