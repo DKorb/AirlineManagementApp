@@ -1,6 +1,8 @@
 package pl.backend.airlinemanagmentapp.flight;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.airport.AirportService;
@@ -14,7 +16,6 @@ import pl.backend.airlinemanagmentapp.ticket.TicketRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +25,9 @@ public class FlightService {
     private final TicketRepository ticketRepository;
     private final AirportService airportService;
 
-    public List<FlightResponseDTO> findAllFlights() {
-        return flightRepository.findAll().stream()
-                .map(this::convertToFlightResponseDTO)
-                .toList();
+    public Page<FlightResponseDTO> findAllFlights(Pageable pageable) {
+        return flightRepository.findAll(pageable)
+                .map(this::convertToFlightResponseDTO);
     }
 
     public FlightResponseDTO findFlightResponseById(Integer flightId) {

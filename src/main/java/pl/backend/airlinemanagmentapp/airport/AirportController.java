@@ -1,6 +1,8 @@
 package pl.backend.airlinemanagmentapp.airport;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +10,6 @@ import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.airport.dto.UpdateAirportDTO;
 import pl.backend.airlinemanagmentapp.exceptions.dto.DefaultResponseDTO;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/airports")
@@ -19,8 +20,13 @@ public class AirportController {
     private final AirportService airportService;
 
     @GetMapping
-    public ResponseEntity<List<AirportDTO>> getAllAirports() {
-        return new ResponseEntity<>(airportService.findAllAirports(), HttpStatus.OK);
+    public ResponseEntity<Page<AirportDTO>> getAllAirports(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        var pageable = PageRequest.of(page, size);
+        Page<AirportDTO> airportPage = airportService.findAllAirports(pageable);
+        return new ResponseEntity<>(airportPage, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

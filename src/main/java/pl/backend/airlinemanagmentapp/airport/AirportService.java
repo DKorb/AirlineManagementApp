@@ -1,6 +1,8 @@
 package pl.backend.airlinemanagmentapp.airport;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.airport.dto.UpdateAirportDTO;
@@ -8,7 +10,6 @@ import pl.backend.airlinemanagmentapp.exceptions.AirportNotFoundException;
 import pl.backend.airlinemanagmentapp.exceptions.CustomDuplicateKeyException;
 import pl.backend.airlinemanagmentapp.exceptions.InvalidAirportCodeException;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,10 +17,9 @@ public class AirportService {
 
     private final AirportRepository airportRepository;
 
-    public List<AirportDTO> findAllAirports() {
-        return airportRepository.findAll().stream()
-                .map(this::convertToAirportDto)
-                .toList();
+    public Page<AirportDTO> findAllAirports(Pageable pageable) {
+        return airportRepository.findAll(pageable)
+                .map(this::convertToAirportDto);
     }
 
     public Airport fetchAirportById(Integer airportId) {

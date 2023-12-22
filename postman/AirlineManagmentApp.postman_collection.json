@@ -167,7 +167,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/airports",
+							"raw": "http://localhost:9090/api/v1/airports?page=0&size=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -177,6 +177,16 @@
 								"api",
 								"v1",
 								"airports"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -326,7 +336,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:9090/api/v1/flights",
+							"raw": "http://localhost:9090/api/v1/flights?page=0&size=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -336,6 +346,16 @@
 								"api",
 								"v1",
 								"flights"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
 							]
 						}
 					},
@@ -524,7 +544,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:9090/api/v1/users/tickets",
+							"raw": "http://localhost:9090/api/v1/users/tickets?page=0&size=10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -535,6 +555,16 @@
 								"v1",
 								"users",
 								"tickets"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
 							]
 						}
 					},

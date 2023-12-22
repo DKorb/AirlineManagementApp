@@ -2,6 +2,8 @@ package pl.backend.airlinemanagmentapp.ticket;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.airport.dto.AirportBasicDTO;
@@ -33,10 +35,9 @@ public class TicketService {
                 .toList();
     }
 
-    public List<TicketResponseDTO> getAllTickets() {
-        return ticketRepository.findAll().stream()
-                .map(this::convertToTicketResponseDTO)
-                .toList();
+    public Page<TicketResponseDTO> getAllTickets(Pageable pageable) {
+        return ticketRepository.findAll(pageable)
+                .map(this::convertToTicketResponseDTO);
     }
 
     public void deleteUserTicket(Integer userId, Integer ticketId) {

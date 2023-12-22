@@ -1,6 +1,8 @@
 package pl.backend.airlinemanagmentapp.flight;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +37,13 @@ public class FlightController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FlightResponseDTO>> getAllFlights() {
-        return new ResponseEntity<>(flightService.findAllFlights(), HttpStatus.OK);
+    public ResponseEntity<Page<FlightResponseDTO>> getAllFlights(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        var pageable = PageRequest.of(page, size);
+        Page<FlightResponseDTO> flightPage = flightService.findAllFlights(pageable);
+        return new ResponseEntity<>(flightPage, HttpStatus.OK);
     }
 
     @PutMapping("{flightId}")

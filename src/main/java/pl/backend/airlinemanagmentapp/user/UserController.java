@@ -1,6 +1,8 @@
 package pl.backend.airlinemanagmentapp.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import pl.backend.airlinemanagmentapp.exceptions.dto.DefaultResponseDTO;
@@ -28,8 +30,12 @@ public class UserController {
     }
 
     @GetMapping("tickets")
-    public ResponseEntity<List<TicketResponseDTO>> getAllTickets() {
-        return new ResponseEntity<>(ticketService.getAllTickets(), HttpStatus.OK);
+    public ResponseEntity<Page<TicketResponseDTO>> getAllTickets(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        var pageable = PageRequest.of(page, size);
+        Page<TicketResponseDTO> ticketsPage = ticketService.getAllTickets(pageable);
+        return new ResponseEntity<>(ticketsPage, HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/tickets")
