@@ -5,10 +5,15 @@ import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.airport.AirportService;
 import pl.backend.airlinemanagmentapp.airport.dto.AirportBasicDTO;
+import pl.backend.airlinemanagmentapp.exceptions.CustomDuplicateKeyException;
 import pl.backend.airlinemanagmentapp.exceptions.FlightNotFoundException;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightDTO;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightResponseDTO;
+import pl.backend.airlinemanagmentapp.flight.dto.FlightStatusDTO;
+import pl.backend.airlinemanagmentapp.ticket.TicketRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,6 +21,7 @@ import java.util.List;
 public class FlightService {
 
     private final FlightRepository flightRepository;
+    private final TicketRepository ticketRepository;
     private final AirportService airportService;
 
     public List<FlightResponseDTO> findAllFlights() {
@@ -25,10 +31,15 @@ public class FlightService {
     }
 
     public FlightResponseDTO findFlightResponseById(Integer flightId) {
-        var flight = flightRepository.findById(flightId)
+        return flightRepository.findById(flightId)
+                .map(this::convertToFlightResponseDTO)
                 .orElseThrow(() -> new FlightNotFoundException(flightId));
+    }
 
-        return convertToFlightResponseDTO(flight);
+    public FlightResponseDTO findFlightByFlightNumber(String flightNumber) {
+        return flightRepository.findFlightByFlightNumber(flightNumber)
+                .map(this::convertToFlightResponseDTO)
+                .orElseThrow(() -> new FlightNotFoundException(flightNumber));
     }
 
     public Flight findFlightById(Integer flightId) {
@@ -38,20 +49,28 @@ public class FlightService {
 
 
     public FlightResponseDTO createFlight(FlightDTO flightDTO) {
-        var flight = createFlightEntityFromDTO(flightDTO);
+        var flightDuration = calculateMinutesBetweenFlights(flightDTO.departureTime(), flightDTO.arrivalTime());
+        if (flightRepository.existsByFlightNumber(flightDTO.flightNumber())) {
+            throw new CustomDuplicateKeyException(flightDTO.flightNumber());
+        }
+        var flight = createFlightEntityFromDTO(flightDTO, flightDuration);
         var savedFlight = flightRepository.save(flight);
         return convertToFlightResponseDTO(savedFlight);
     }
 
-    private Flight createFlightEntityFromDTO(FlightDTO flightDTO) {
-        var departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
-        var arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
+    private Flight createFlightEntityFromDTO(FlightDTO flightDTO, Long flightDuration) {
+        var departureAirport = airportService.fetchAirportById(flightDTO.departureAirportId());
+        var arrivalAirport = airportService.fetchAirportById(flightDTO.arrivalAirportId());
 
         return Flight.builder()
                 .flightNumber(flightDTO.flightNumber())
                 .airlineName(flightDTO.airlineName())
                 .departureAirport(departureAirport)
                 .arrivalAirport(arrivalAirport)
+                .arrivalTime(flightDTO.arrivalTime())
+                .departureTime(flightDTO.departureTime())
+                .flightStatus(flightDTO.flightStatus())
+                .flightDuration(flightDuration)
                 .build();
     }
 
@@ -64,7 +83,11 @@ public class FlightService {
                 flight.getFlightNumber(),
                 flight.getAirlineName(),
                 departureInfo,
-                arrivalInfo);
+                arrivalInfo,
+                flight.getDepartureTime(),
+                flight.getArrivalTime(),
+                flight.getFlightStatus(),
+                flight.getFlightDuration());
     }
 
     private AirportBasicDTO convertToAirportBasicInfo(Airport airport) {
@@ -77,29 +100,47 @@ public class FlightService {
     }
 
     public FlightResponseDTO updateFlight(Integer flightId, FlightDTO flightDTO) {
+
         var existingFlight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new FlightNotFoundException(flightId));
-
         existingFlight.setFlightNumber(flightDTO.flightNumber());
         existingFlight.setAirlineName(flightDTO.airlineName());
 
-        var departureAirport = airportService.findAirportById(flightDTO.departureAirportId());
+        var departureAirport = airportService.fetchAirportById(flightDTO.departureAirportId());
         existingFlight.setDepartureAirport(departureAirport);
 
-        var arrivalAirport = airportService.findAirportById(flightDTO.arrivalAirportId());
+        var arrivalAirport = airportService.fetchAirportById(flightDTO.arrivalAirportId());
         existingFlight.setArrivalAirport(arrivalAirport);
+
+        existingFlight.setArrivalTime(flightDTO.arrivalTime());
+        existingFlight.setDepartureTime(flightDTO.departureTime());
+        existingFlight.setFlightDuration(calculateMinutesBetweenFlights(flightDTO.departureTime(), flightDTO.arrivalTime()));
+        existingFlight.setFlightStatus(flightDTO.flightStatus());
 
         var updatedFlight = flightRepository.save(existingFlight);
 
         return convertToFlightResponseDTO(updatedFlight);
     }
 
-
-    public void deleteFlight(Integer flightId) {
-        if (!flightRepository.existsById(flightId)) {
-            throw new FlightNotFoundException(flightId);
+    public void changeFlightStatus(String flightNumber, FlightStatusDTO flightStatusDTO) {
+        if (!flightRepository.existsByFlightNumber(flightNumber)) {
+            throw new FlightNotFoundException(flightNumber);
         }
-        flightRepository.deleteById(flightId);
+        flightRepository.updateFlightStatus(flightNumber, flightStatusDTO.flightStatus());
+    }
+
+
+
+    public void deleteFlight(String flightNumber) {
+        if (!flightRepository.existsByFlightNumber(flightNumber)) {
+            throw new FlightNotFoundException(flightNumber);
+        }
+        ticketRepository.deleteTicketsByFlightNumber(flightNumber);
+        flightRepository.deleteByFlightNumber(flightNumber);
+    }
+
+    public Long calculateMinutesBetweenFlights(LocalDateTime departureTime, LocalDateTime arrivalTime) {
+        return Duration.between(departureTime, arrivalTime).toMinutes();
     }
 
 }

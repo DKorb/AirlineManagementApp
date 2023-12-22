@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.backend.airlinemanagmentapp.exceptions.dto.DefaultResponseDTO;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightDTO;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightResponseDTO;
+import pl.backend.airlinemanagmentapp.flight.dto.FlightStatusDTO;
 
 import java.util.List;
 
@@ -23,6 +24,11 @@ public class FlightController {
         return new ResponseEntity<>(flightService.createFlight(flight), HttpStatus.OK);
     }
 
+    @GetMapping("/{flightNumber}")
+    public ResponseEntity<FlightResponseDTO> getFlightByFlightNumber(@PathVariable String flightNumber) {
+        return new ResponseEntity<>(flightService.findFlightByFlightNumber(flightNumber), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FlightResponseDTO> getFlightById(@PathVariable Integer id) {
         return new ResponseEntity<>(flightService.findFlightResponseById(id), HttpStatus.OK);
@@ -33,18 +39,28 @@ public class FlightController {
         return new ResponseEntity<>(flightService.findAllFlights(), HttpStatus.OK);
     }
 
-    @PutMapping("/{flightId}")
+    @PutMapping("{flightId}")
     public ResponseEntity<FlightResponseDTO> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDTO flightDTO) {
         return new ResponseEntity<>(flightService.updateFlight(flightId, flightDTO), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteFlight(@PathVariable Integer id) {
-        flightService.deleteFlight(id);
+    @DeleteMapping("/{flightNumber}")
+    public ResponseEntity<?> deleteFlight(@PathVariable String flightNumber) {
+        flightService.deleteFlight(flightNumber);
         var deleteResponse = DefaultResponseDTO.builder()
-                .message("Flight with ID " + id + " has been successfully deleted.")
+                .message("Flight with number " + flightNumber + " has been successfully deleted.")
                 .build();
         return new ResponseEntity<>(deleteResponse, HttpStatus.OK);
+    }
+
+    @PatchMapping("{flightNumber}")
+    public ResponseEntity<?> changeFlightStatus(@PathVariable String flightNumber,
+                                                @RequestBody FlightStatusDTO flightStatusDTO) {
+        flightService.changeFlightStatus(flightNumber, flightStatusDTO);
+        var updateResponse = DefaultResponseDTO.builder()
+                .message("Flight " + flightNumber + " status has been successfully updated to " + flightStatusDTO.flightStatus())
+                .build();
+        return new ResponseEntity<>(updateResponse, HttpStatus.OK);
     }
 
 }
