@@ -13,6 +13,7 @@ const Body = () => {
     const [flight, setFlight] = useState([])
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
     useEffect(() => {
         fetch('http://localhost:9090/api/v1/flights')
@@ -61,11 +62,11 @@ const Body = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,  
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
                 flightId: selectedFlightId,
-                purchaseTime: new Date().toISOString(), 
+                purchaseTime: new Date().toISOString(),
             }),
         })
             .then(response => response.json())
@@ -77,6 +78,13 @@ const Body = () => {
                 setError(error.message)
             })
     }
+
+    useEffect(() => {
+        const userId = localStorage.getItem("user_id")
+        const accessToken = localStorage.getItem("access_token")
+        setIsUserLoggedIn(!!(userId && accessToken))
+    }, [])
+
     return (
         <div style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(3px)', width: '700px' }}>
@@ -126,9 +134,11 @@ const Body = () => {
                                 ) : (
                                     <p>Loading...</p>
                                 )}
-                                <Button variant="success" id="button-addon2" onClick={handleTicket}>
-                                    Buy ticket
-                                </Button>
+                                {isUserLoggedIn && (
+                                    <Button variant="success" id="button-addon2" onClick={handleTicket}>
+                                        Buy ticket
+                                    </Button>
+                                )}
                             </Offcanvas.Body>
                         </Offcanvas>
                     </InputGroup>

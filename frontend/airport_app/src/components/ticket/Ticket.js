@@ -13,6 +13,7 @@ const Ticket = () => {
     const userId = localStorage.getItem("user_id")
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
+    const [searchUsername, setSearchUsername] = useState('')
 
     useEffect(() => {
         fetch('http://localhost:9090/api/v1/users/tickets')
@@ -94,10 +95,18 @@ const Ticket = () => {
         window.location.reload(true)
     }
 
+    const filteredTickets = tickets.filter(ticket => ticket.user.username.toLowerCase().includes(searchUsername.toLowerCase()))
 
     return (
         <div style={{ maxWidth: '1000px', margin: '150px auto' }}>
             <h1 style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ALL TICKETS</h1>
+            <input
+                type="search"
+                className='form-control rounded'
+                placeholder="🔍 Search by username"
+                value={searchUsername}
+                onChange={(e) => setSearchUsername(e.target.value)}
+            />
             {errors && <Alert style={{ width: '100%', textAlign: 'center' }} variant='danger'>{errors}</Alert>}
             {success && <Alert style={{ width: '100%', textAlign: 'center' }} variant='success'>{success}</Alert>}
             <Table striped bordered hover variant="dark">
@@ -112,7 +121,7 @@ const Ticket = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tickets.map(ticket => (
+                    {filteredTickets.map(ticket => (
                         <tr key={ticket.id}>
                             <td>{ticket.user.username}</td>
                             <td>{ticket.flight.flightNumber}</td>

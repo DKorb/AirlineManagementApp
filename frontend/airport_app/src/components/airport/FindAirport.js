@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, InputGroup, Offcanvas } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form'
 import { FaSearch } from "react-icons/fa"
@@ -9,10 +9,18 @@ const FindAirport = () => {
     const history = useHistory()
     const [searchTerm, setSearchTerm] = useState('')
     const [airportData, setAirportData] = useState(null)
+    const [airport, setAirport] = useState([])
     const [show, setShow] = useState(false)
-
+    const [error, setError] = useState(null)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
+
+    useEffect(() => {
+        fetch('http://localhost:9090/api/v1/airports')
+            .then(response => response.json())
+            .then(data => setAirport(data))
+            .catch(error => console.error('Error fetching airports:', error))
+    }, [])
 
     const handleSearch = () => {
         fetch(`http://localhost:9090/api/v1/airports/${searchTerm}`)
@@ -20,8 +28,12 @@ const FindAirport = () => {
             .then(data => {
                 setAirportData(data)
                 handleShow()
+                setError(null)
             })
-            .catch(error => console.error('Error fetching airport:', error))
+            .catch(error => {
+                console.error('Error fetching airport:', error.message)
+                setError(error.message)
+            })
     }
 
     const handleBack = () => {
@@ -34,15 +46,23 @@ const FindAirport = () => {
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(3px)', width: '700px' }}>
                 <h1 style={{ color: 'white', fontSize: '30px', letterSpacing: '3px' }}>FIND AIRPORT</h1>
                 <Form className="d-flex flex-column align-items-center">
+                    {error && <p style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
                     <InputGroup className="mb-3">
                         <FaSearch style={{ color: 'white', fontSize: '30px', marginRight: '10px', marginTop: '5px' }} />
-                        <Form.Control
+                        <Form.Select
                             placeholder="Find airport"
                             aria-label="Find airport"
                             aria-describedby="basic-addon2"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                        >
+                            <option value="">Select an airport</option>
+                            {airport.map(airport => (
+                                <option key={airport.id} value={airport.id}>
+                                    Airport: {airport.name} in {airport.city} {airport.country}
+                                </option>
+                            ))}
+                        </Form.Select>
                         <Button variant="primary" id="button-addon2" onClick={handleSearch}>
                             Search
                         </Button>

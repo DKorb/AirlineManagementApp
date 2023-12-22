@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import NavigationBar from './components/NavigationBar'
 import Body from './components/Body'
 import Register from './components/user/Register'
@@ -14,7 +14,7 @@ import ShowAllFlights from './components/flight/ShowAllFlights'
 import UpdateFlight from './components/flight/UpdateFlight'
 import FindFlight from './components/flight/FindFlight'
 import Ticket from './components/ticket/Ticket'
-import GenerateTicket from './components/ticket/GenerateTicket'
+import NotFound from './components/NotFound'
 
 function App() {
   return (
@@ -25,18 +25,18 @@ function App() {
         <Route path="/" exact component={Body} />
         <Route path="/register" component={Register} />
         <Route path="/login" component={Login} />
-        <Route path="/airport" component={Airport} />
-        <Route path="/create-airport" component={CreateNewAirport} />
-        <Route path="/all-airports" component={ShowAllAirports} />
-        <Route path="/find-airport" component={FindAirport} />
-        <Route path="/edit-airport/:id" component={UpdateAirport} />
-        <Route path="/flight" component={Flights} />
-        <Route path="/create-flight" component={CreateNewFlight} />
-        <Route path="/all-flights" component={ShowAllFlights} />
-        <Route path="/edit-flight/:id" component={UpdateFlight} />
-        <Route path="/find-flight" component={FindFlight} />
-        <Route path="/ticket" component={Ticket} />
-        <Route path="/generate-ticket" component={GenerateTicket} />
+        <PrivateRoute path="/airport" component={Airport} />
+        <PrivateRoute path="/create-airport" component={CreateNewAirport} />
+        <PrivateRoute path="/all-airports" component={ShowAllAirports} />
+        <PrivateRoute path="/find-airport" component={FindAirport} />
+        <PrivateRoute path="/edit-airport/:id" component={UpdateAirport} />
+        <PrivateRoute path="/flight" component={Flights} />
+        <PrivateRoute path="/create-flight" component={CreateNewFlight} />
+        <PrivateRoute path="/all-flights" component={ShowAllFlights} />
+        <PrivateRoute path="/edit-flight/:id" component={UpdateFlight} />
+        <PrivateRoute path="/find-flight" component={FindFlight} />
+        <PrivateRoute path="/ticket" component={Ticket} />
+        <Route path='*' component={NotFound} />
       </Switch>
     </Router>
   )
@@ -47,6 +47,25 @@ function BackImage() {
     <img className='background-image' 
     src={"/images/airport-background.jpg"} 
     alt='backgroundimg'/>
+  )
+}
+
+function PrivateRoute({ component: Component, ...rest}) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+      localStorage.getItem("user_id") !== null ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+        to={{
+          pathname: "/login",
+          state: {from: props.location}
+        }}
+        />
+      )}
+      />
   )
 }
 
