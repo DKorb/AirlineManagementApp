@@ -9,6 +9,7 @@ const RegisterForm = () => {
     const history = useHistory()
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
+    const [passwordRequirements, setPasswordRequirements] = useState('')
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -20,11 +21,55 @@ const RegisterForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target
+
+        if (name === 'firstName' && value !== '' && !/^[a-zA-Z]+$/.test(value)) {
+            return
+        }
+
+        if (name === 'lastName' && value !== '' && !/^[a-zA-Z]+$/.test(value)) {
+            return
+        }
+
+        if (name === 'password') {
+            handlePasswordChange(value)
+        }
+
         setFormData({ ...formData, [name]: value })
+    }
+
+    const handlePasswordChange = (inputValue) => {
+        const hasUppercase = /[A-Z]/.test(inputValue)
+        const hasNumber = /\d/.test(inputValue)
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(inputValue)
+        const hasAtLeast6Characters = inputValue.length >= 6
+
+        const requirements = (
+            (!hasUppercase ? 'One uppercase letter, ' : '') +
+            (!hasNumber ? 'One digit, ' : '') +
+            (!hasSpecialChar ? 'One special character, ' : '') +
+            (!hasAtLeast6Characters ? 'At least 6 characters' : '')
+        ).trim()
+
+        setPasswordRequirements(requirements)
+    }
+
+    const isPasswordValid = () => {
+        const { password } = formData
+        const hasUppercase = /[A-Z]/.test(password)
+        const hasNumber = /\d/.test(password)
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+        const hasAtLeast6Characters = password.length >= 6
+
+        return hasUppercase && hasNumber && hasSpecialChar && hasAtLeast6Characters
     }
 
     const handleRegister = async (e) => {
         e.preventDefault()
+
+        if (!isPasswordValid()) {
+            setErrors('Password does not meet the requirements.')
+            return;
+        }
 
         try {
             const response = await fetch('http://localhost:9090/api/v1/auth/register', {
@@ -71,7 +116,12 @@ const RegisterForm = () => {
                     <Form.Group className="mb-3" controlId="formGroupPassword">
                         <Form.Control required style={{ width: '450px' }} type="password" name="password" value={formData.password} placeholder="Enter password" onChange={handleChange} />
                     </Form.Group>
-                    <Button variant="primary" type="submit" className="mt-3">Sign up</Button>
+                    {passwordRequirements && (
+                        <p style={{ color: 'rgb(255, 255, 255)', fontSize: '12px' }}>
+                            {passwordRequirements}
+                        </p>
+                    )}
+                    <Button variant="primary" type="submit" className="mt-3" disabled={!isPasswordValid}>Sign up</Button>
                 </Form>
             </div>
         </div>
