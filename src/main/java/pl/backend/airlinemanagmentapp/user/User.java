@@ -2,7 +2,6 @@ package pl.backend.airlinemanagmentapp.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pl.backend.airlinemanagmentapp.ticket.Ticket;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 

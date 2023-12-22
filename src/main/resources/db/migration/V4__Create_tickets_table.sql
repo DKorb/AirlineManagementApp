@@ -1,7 +1,7 @@
 CREATE TABLE `tickets`
 (
-    `flight_id`     int         NOT NULL,
     `id`            int         NOT NULL AUTO_INCREMENT,
+    `flight_id`     int         NOT NULL,
     `user_id`       int         NOT NULL,
     `purchase_time` datetime(6) NOT NULL,
     PRIMARY KEY (`id`),

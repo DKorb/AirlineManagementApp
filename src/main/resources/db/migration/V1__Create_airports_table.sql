@@ -3,7 +3,7 @@ CREATE TABLE `airports`
     `id`      int          NOT NULL AUTO_INCREMENT,
     `name`    varchar(255) NOT NULL,
     `city`    varchar(255) NOT NULL,
-    `code`    varchar(255) NOT NULL,
+    `code`    varchar(255) NOT NULL UNIQUE,
     `country` varchar(255) NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `UK_8x5wlokxte7yksdsllxtxbjf0` (`code`)
