@@ -5,7 +5,7 @@ import { FaSearch } from "react-icons/fa"
 
 const Body = () => {
 
-    const [searchTerm, setSearchTerm] = useState(null)
+    const [searchTerm, setSearchTerm] = useState('')
     const [flightData, setFlightData] = useState(null)
     const [show, setShow] = useState(false)
     const [error, setError] = useState(null)
@@ -16,21 +16,26 @@ const Body = () => {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/flights')
-            .then(response => response.json())
-            .then(data => setFlight(data))
-            .catch(error => console.error('Error fetching flights:', error))
-    }, [])
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=10')
+        .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok')
+            }
+            return response.json()
+          })
+          .then(data => setFlight(data.content)) 
+          .catch(error => console.error('Error fetching flights:', error))
+      }, [])
 
     const handleSearch = () => {
-        const selectedFlightId = searchTerm
+        const selectedFlightNumber = searchTerm
 
-        if (!selectedFlightId) {
+        if (!selectedFlightNumber) {
             setError('Please select a flight from the list.')
             return
         }
 
-        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightId}`)
+        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`)
             .then(response => response.json())
             .then(data => {
                 setFlightData(data)
@@ -44,17 +49,13 @@ const Body = () => {
     }
 
     const handleTicket = () => {
-        const selectedFlightId = searchTerm
+        const selectedFlightNumber = searchTerm
+        console.log(selectedFlightNumber)
         const userId = localStorage.getItem("user_id")
         const accessToken = localStorage.getItem("access_token")
 
         if (!userId) {
             setError('User not logged in.')
-            return
-        }
-
-        if (!selectedFlightId) {
-            setError('Please select a flight from the list.')
             return
         }
 
@@ -65,7 +66,7 @@ const Body = () => {
                 'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({
-                flightId: selectedFlightId,
+                flightNumber: selectedFlightNumber,
                 purchaseTime: new Date().toISOString(),
             }),
         })
@@ -103,7 +104,7 @@ const Body = () => {
                         >
                             <option value="">Select a flight</option>
                             {flight.map(flight => (
-                                <option key={flight.id} value={flight.id}>
+                                <option key={flight.flightNumber} value={flight.flightNumber}>
                                     {flight.flightNumber} - {flight.departureAirport.name} to {flight.arrivalAirport.name}
                                 </option>
                             ))}

@@ -99,10 +99,10 @@ public class FlightService {
                 airport.getCountry());
     }
 
-    public FlightResponseDTO updateFlight(Integer flightId, FlightDTO flightDTO) {
+    public FlightResponseDTO updateFlight(FlightDTO flightDTO) {
 
-        var existingFlight = flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException(flightId));
+        var existingFlight = flightRepository.findFlightByFlightNumber(flightDTO.flightNumber())
+                .orElseThrow(() -> new FlightNotFoundException(flightDTO.flightNumber()));
         existingFlight.setFlightNumber(flightDTO.flightNumber());
         existingFlight.setAirlineName(flightDTO.airlineName());
 

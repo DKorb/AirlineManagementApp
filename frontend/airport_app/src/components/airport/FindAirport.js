@@ -16,10 +16,15 @@ const FindAirport = () => {
     const handleShow = () => setShow(true)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/airports')
-            .then(response => response.json())
-            .then(data => setAirport(data))
-            .catch(error => console.error('Error fetching airports:', error))
+        fetch('http://localhost:9090/api/v1/airports?page=0&size=10')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return response.json()
+            })
+            .then(data => setAirport(data.content))
+            .catch(error => console.error('Error fetching flights:', error))
     }, [])
 
     const handleSearch = () => {
@@ -59,7 +64,7 @@ const FindAirport = () => {
                             <option value="">Select an airport</option>
                             {airport.map(airport => (
                                 <option key={airport.id} value={airport.id}>
-                                    Airport: {airport.name} in {airport.city} {airport.country}
+                                    Airport: {airport.name} in {airport.city}, {airport.country}
                                 </option>
                             ))}
                         </Form.Select>

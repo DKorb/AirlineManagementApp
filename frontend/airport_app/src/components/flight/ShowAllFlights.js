@@ -8,28 +8,33 @@ const ShowAllFlights = () => {
 
     const history = useHistory()
     const [flights, setFlights] = useState([])
-    const [selectedFlightId, setSelectedFlightId] = useState(null)
+    const [selectedFlightNumber, setSelectedFlightNumber] = useState('')
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/flights')
-            .then(response => response.json())
-            .then(data => setFlights(data))
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=10')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return response.json()
+            })
+            .then(data => setFlights(data.content))
             .catch(error => console.error('Error fetching flights:', error))
     }, [])
 
-    const handleEditFlight = (id) => {
-        history.push(`/edit-flight/${id}`)
+    const handleEditFlight = (flightNumber) => {
+        history.push(`/edit-flight/${flightNumber}`)
         window.location.reload(true)
     }
 
-    const handleDeleteClick = (id) => {
-        setSelectedFlightId(id)
+    const handleDeleteClick = (flightNumber) => {
+        setSelectedFlightNumber(flightNumber)
         setShowDeleteModal(true)
     }
 
     const handleDeleteConfirm = async () => {
-        await fetch(`http://localhost:9090/api/v1/flights/${selectedFlightId}`, {
+        await fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -38,20 +43,22 @@ const ShowAllFlights = () => {
         })
             .then(() => {
                 fetch('http://localhost:9090/api/v1/flights')
-                    .then(response => response.json())
-                    .then(data => setFlights(data))
-                    .catch(error => console.error('Error fetching flights:', error));
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok')
+                        }
+                        return response.json()
+                    })
+                    .then(data => setFlights(data.content))
             })
             .catch(error => console.error('Error deleting flight:', error))
             .finally(() => {
                 setShowDeleteModal(false)
-                setSelectedFlightId(null)
             })
     }
 
     const handleDeleteCancel = () => {
         setShowDeleteModal(false)
-        setSelectedFlightId(null)
     }
 
     const handleBack = () => {
@@ -59,7 +66,7 @@ const ShowAllFlights = () => {
         window.location.reload(true)
     }
 
-    return ( 
+    return (
         <div style={{ maxWidth: '1000px', margin: '150px auto' }}>
             <h1 style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ALL FLIGHTS</h1>
             <Table striped bordered hover variant="dark">
@@ -69,21 +76,29 @@ const ShowAllFlights = () => {
                         <th>Airline name</th>
                         <th>Departure airport name (code)</th>
                         <th>Arrival airport name (code)</th>
+                        <th>Departure time</th>
+                        <th>Arrival time</th>
+                        <th>Flight duration</th>
+                        <th>Flight status</th>
                         <th style={{ width: '155px' }}>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {flights.map(flight => (
-                        <tr key={flight.id}>
+                        <tr key={flight.flightNumber}>
                             <td>{flight.flightNumber}</td>
                             <td>{flight.airlineName}</td>
                             <td>{flight.departureAirport.name} ({flight.departureAirport.code})</td>
                             <td>{flight.arrivalAirport.name} ({flight.arrivalAirport.code})</td>
+                            <td>{flight.departureTime}</td>
+                            <td>{flight.arrivalTime}</td>
+                            <td>{flight.flightDuration} min.</td>
+                            <td>{flight.flightStatus}</td>
                             <td>
-                                <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleEditFlight(flight.id)}>
+                                <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleEditFlight(flight.flightNumber)}>
                                     Edit
                                 </Button>
-                                <Button variant="danger" onClick={() => handleDeleteClick(flight.id)}>
+                                <Button variant="danger" onClick={() => handleDeleteClick(flight.flightNumber)}>
                                     Delete
                                 </Button>
                             </td>
@@ -111,7 +126,7 @@ const ShowAllFlights = () => {
                 </Modal.Footer>
             </Modal>
         </div>
-     )
+    )
 }
- 
+
 export default ShowAllFlights

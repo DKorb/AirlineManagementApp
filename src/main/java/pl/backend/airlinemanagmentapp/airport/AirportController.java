@@ -45,11 +45,11 @@ public class AirportController {
         return ResponseEntity.ok(airportDTO);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<DefaultResponseDTO> deleteAirport(@PathVariable Integer id) {
-        airportService.deleteAirport(id);
+    @DeleteMapping("/{code}")
+    public ResponseEntity<DefaultResponseDTO> deleteAirport(@PathVariable String code) {
+        airportService.deleteAirport(code);
         DefaultResponseDTO successResponseDTO = DefaultResponseDTO.builder()
-                .message("Airport with ID " + id + " has been successfully deleted.")
+                .message("Airport with code " + code + " has been successfully deleted.")
                 .build();
         return new ResponseEntity<>(successResponseDTO, HttpStatus.OK);
     }

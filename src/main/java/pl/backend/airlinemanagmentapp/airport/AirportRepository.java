@@ -8,4 +8,5 @@ public interface AirportRepository extends JpaRepository<Airport, Integer> {
 
     boolean existsByCode(String code);
 
+    void deleteByCode(String code);
 }

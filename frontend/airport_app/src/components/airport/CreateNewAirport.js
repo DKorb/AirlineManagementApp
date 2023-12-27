@@ -61,7 +61,7 @@ const CreateNewAirport = () => {
                     {success && <Alert style={{ width: '100%', textAlign: 'center' }} variant='success'>{success}</Alert>}
                     <h1 className="mb-4" style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ADD NEW AIRPORT</h1>
                     <Form.Group className="mb-3" controlId="formGroupCode">
-                        <Form.Control required style={{ width: '450px' }} type="text" name="code" value={formData.code} placeholder="Enter code (three characters long)" onChange={handleChange} />
+                        <Form.Control maxLength={3} required style={{ width: '450px' }} type="text" name="code" value={formData.code} placeholder="Enter code (three characters long)" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupName">
                         <Form.Control required style={{ width: '450px' }} type="text" name="name" value={formData.name} placeholder="Enter airport name" onChange={handleChange} />

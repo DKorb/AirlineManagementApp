@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.airport.dto.UpdateAirportDTO;
 import pl.backend.airlinemanagmentapp.exceptions.AirportNotFoundException;
 import pl.backend.airlinemanagmentapp.exceptions.CustomDuplicateKeyException;
 import pl.backend.airlinemanagmentapp.exceptions.InvalidAirportCodeException;
+import pl.backend.airlinemanagmentapp.exceptions.dto.AirportCodeNotFoundException;
 
 
 @Service
@@ -57,11 +59,12 @@ public class AirportService {
         return convertToAirportDto(updatedAirport);
     }
 
-    public void deleteAirport(Integer airportId) {
-        if (!airportRepository.existsById(airportId)) {
-            throw new AirportNotFoundException(airportId);
+    @Transactional
+    public void deleteAirport(String code) {
+        if (!airportRepository.existsByCode(code)) {
+            throw new AirportCodeNotFoundException(code);
         }
-        airportRepository.deleteById(airportId);
+        airportRepository.deleteByCode(code);
     }
 
 

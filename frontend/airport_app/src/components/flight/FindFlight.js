@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom"
 const FindFlight = () => {
 
     const history = useHistory()
-    const [searchTerm, setSearchTerm] = useState(null)
+    const [searchTerm, setSearchTerm] = useState('')
     const [flightData, setFlightData] = useState(null)
     const [flight, setFlight] = useState([])
     const [show, setShow] = useState(false)
@@ -16,22 +16,27 @@ const FindFlight = () => {
     const handleShow = () => setShow(true)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/flights')
-            .then(response => response.json())
-            .then(data => setFlight(data))
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=10')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return response.json()
+            })
+            .then(data => setFlight(data.content))
             .catch(error => console.error('Error fetching flights:', error))
     }, [])
 
 
     const handleSearch = () => {
-        const selectedFlightId = searchTerm
+        const selectedFlightNumber = searchTerm
 
-        if (!selectedFlightId) {
+        if (!selectedFlightNumber) {
             setError('Please select a flight from the list.')
             return;
         }
 
-        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightId}`)
+        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`)
             .then(response => response.json())
             .then(data => {
                 setFlightData(data)
@@ -66,7 +71,7 @@ const FindFlight = () => {
                         >
                             <option value="">Select a flight</option>
                             {flight.map(flight => (
-                                <option key={flight.id} value={flight.id}>
+                                <option key={flight.flightNumber} value={flight.flightNumber}>
                                     {flight.flightNumber} - {flight.departureAirport.name} to {flight.arrivalAirport.name}
                                 </option>
                             ))}
@@ -82,8 +87,13 @@ const FindFlight = () => {
                                 {flightData ? (
                                     <>
                                         <p><b>Flight number:</b> {flightData.flightNumber}</p>
+                                        <p>{flightData.airlineName}</p>
                                         <p><b>Departure airport:</b> {flightData.departureAirport.name}</p>
                                         <p><b>Arrival airport:</b> {flightData.arrivalAirport.name}</p>
+                                        <p><b>Departure time:</b> {flightData.departureTime}</p>
+                                        <p><b>Arrival time:</b> {flightData.arrivalTime}</p>
+                                        <p><b>Flight status:</b> {flightData.flightStatus}</p>
+                                        <p><b>Flight duration:</b> {flightData.flightDuration}</p>
                                     </>
                                 ) : (
                                     <p>Loading...</p>

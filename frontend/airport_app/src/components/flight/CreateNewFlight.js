@@ -14,7 +14,11 @@ const CreateNewFlight = () => {
         flightNumber: '',
         airlineName: '',
         departureAirportId: null,
-        arrivalAirportId: null
+        arrivalAirportId: null,
+        departureTime: '',
+        arrivalTime: '',
+        flightStatus: 'SCHEDULED',
+        flightDuration: ''
     })
 
     const handleChange = (e) => {
@@ -71,6 +75,21 @@ const CreateNewFlight = () => {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupArrivalAirportId">
                         <Form.Control required style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupDepartureTime">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="departureTime" value={formData.departureTime} placeholder="Enter departure time (yyyy-MM-dd HH:mm:ss)" onChange={handleChange} pattern="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupArrivalTime">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="arrivalTime" value={formData.arrivalTime} placeholder="Enter arrival time (yyyy-MM-dd HH:mm:ss)" onChange={handleChange} pattern="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupFlightStatus">
+                        <Form.Control as="select" style={{ width: '450px' }} name="flightStatus" value={formData.flightStatus} onChange={handleChange}>
+                            <option value="DELAYED">Delayed</option>
+                            <option value="IN_AIR">In Air</option>
+                            <option value="ARRIVED">Arrived</option>
+                            <option value="CANCELLED">Cancelled</option>
+                            <option value="SCHEDULED">Scheduled</option>
+                        </Form.Control>
                     </Form.Group>
                     <div className="d-flex justify-content-between">
                         <Button style={{ marginRight: '10px' }} variant="primary" type="submit" className="mt-3">

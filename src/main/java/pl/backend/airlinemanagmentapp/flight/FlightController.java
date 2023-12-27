@@ -31,11 +31,6 @@ public class FlightController {
         return new ResponseEntity<>(flightService.findFlightByFlightNumber(flightNumber), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FlightResponseDTO> getFlightById(@PathVariable Integer id) {
-        return new ResponseEntity<>(flightService.findFlightResponseById(id), HttpStatus.OK);
-    }
-
     @GetMapping
     public ResponseEntity<Page<FlightResponseDTO>> getAllFlights(
             @RequestParam(defaultValue = "0") int page,
@@ -47,8 +42,8 @@ public class FlightController {
     }
 
     @PutMapping("{flightId}")
-    public ResponseEntity<FlightResponseDTO> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDTO flightDTO) {
-        return new ResponseEntity<>(flightService.updateFlight(flightId, flightDTO), HttpStatus.OK);
+    public ResponseEntity<FlightResponseDTO> updateFlight(@RequestBody FlightDTO flightDTO) {
+        return new ResponseEntity<>(flightService.updateFlight(flightDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{flightNumber}")

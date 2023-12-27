@@ -8,14 +8,19 @@ const ShowAllAirports = () => {
 
     const history = useHistory()
     const [airports, setAirports] = useState([])
-    const [selectedAirportId, setSelectedAirportId] = useState(null)
+    const [selectedAirportCode, setSelectedAirportCode] = useState('')
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/airports')
-            .then(response => response.json())
-            .then(data => setAirports(data))
-            .catch(error => console.error('Error fetching airports:', error))
+        fetch('http://localhost:9090/api/v1/airports?page=0&size=10')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return response.json()
+            })
+            .then(data => setAirports(data.content))
+            .catch(error => console.error('Error fetching flights:', error))
     }, [])
 
     const handleEditAirport = (id) => {
@@ -23,13 +28,13 @@ const ShowAllAirports = () => {
         window.location.reload(true)
     }
 
-    const handleDeleteClick = (id) => {
-        setSelectedAirportId(id)
+    const handleDeleteClick = (code) => {
+        setSelectedAirportCode(code)
         setShowDeleteModal(true)
     }
 
     const handleDeleteConfirm = async () => {
-        await fetch(`http://localhost:9090/api/v1/airports/${selectedAirportId}`, {
+        await fetch(`http://localhost:9090/api/v1/airports/${selectedAirportCode}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -38,20 +43,22 @@ const ShowAllAirports = () => {
         })
             .then(() => {
                 fetch('http://localhost:9090/api/v1/airports')
-                    .then(response => response.json())
-                    .then(data => setAirports(data))
-                    .catch(error => console.error('Error fetching airports:', error));
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok')
+                        }
+                        return response.json()
+                    })
+                    .then(data => setAirports(data.content))
             })
             .catch(error => console.error('Error deleting airport:', error))
             .finally(() => {
                 setShowDeleteModal(false)
-                setSelectedAirportId(null)
             })
     }
 
     const handleDeleteCancel = () => {
         setShowDeleteModal(false)
-        setSelectedAirportId(null)
     }
 
     const handleBack = () => {
@@ -74,7 +81,7 @@ const ShowAllAirports = () => {
                 </thead>
                 <tbody>
                     {airports.map(airport => (
-                        <tr key={airport.id}>
+                        <tr key={airport.code}>
                             <td>{airport.code}</td>
                             <td>{airport.name}</td>
                             <td>{airport.city}</td>
@@ -83,7 +90,7 @@ const ShowAllAirports = () => {
                                 <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleEditAirport(airport.id)}>
                                     Edit
                                 </Button>
-                                <Button variant="danger" onClick={() => handleDeleteClick(airport.id)}>
+                                <Button variant="danger" onClick={() => handleDeleteClick(airport.code)}>
                                     Delete
                                 </Button>
                             </td>

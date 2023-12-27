@@ -15,7 +15,10 @@ const UpdateFlight = () => {
         flightNumber: '',
         airlineName: '',
         departureAirportId: null,
-        arrivalAirportId: null
+        arrivalAirportId: null,
+        departureTime: '',
+        arrivalTime: '',
+        flightStatus: ''
     })
 
     useEffect(() => {
@@ -25,12 +28,15 @@ const UpdateFlight = () => {
                 .then(data => {
                     const departureAirportId = data.departureAirport ? data.departureAirport.id : null
                     const arrivalAirportId = data.arrivalAirport ? data.arrivalAirport.id : null
-    
+
                     setFormData({
                         flightNumber: data.flightNumber || '',
                         airlineName: data.airlineName || '',
                         departureAirportId: departureAirportId,
                         arrivalAirportId: arrivalAirportId,
+                        departureTime: data.departureTime,
+                        arrivalTime: data.arrivalTime,
+                        flightStatus: data.flightStatus
                     })
                 })
                 .catch(error => console.error('Error fetching flights:', error))
@@ -80,9 +86,6 @@ const UpdateFlight = () => {
                     {errors && <Alert color='danger' style={{ width: '100%', marginTop: '10px', textAlign: 'center' }}>{errors}</Alert>}
                     {success && <Alert variant='success' style={{ width: '100%', marginTop: '10px', textAlign: 'center' }}>{success}</Alert>}
                     <h1 className="mb-4" style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>EDIT FLIGHT</h1>
-                    <Form.Group className="mb-3" controlId="formGroupFlightNumber">
-                        <Form.Control required style={{ width: '450px' }} type="text" name="flightNumber" value={formData.flightNumber} placeholder="Enter flight number" onChange={handleChange} />
-                    </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupAirlineName">
                         <Form.Control required style={{ width: '450px' }} type="text" name="airlineName" value={formData.airlineName} placeholder="Enter airline name" onChange={handleChange} />
                     </Form.Group>
@@ -91,6 +94,21 @@ const UpdateFlight = () => {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupArrivalAirportId">
                         <Form.Control required style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupDepartureTime">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="departureTime" value={formData.departureTime} placeholder="Enter departure time" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupArrivalTime">
+                        <Form.Control required style={{ width: '450px' }} type="text" name="arrivalTime" value={formData.arrivalTime} placeholder="Enter arrival time" onChange={handleChange} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="formGroupFlightStatus">
+                        <Form.Control as="select" style={{ width: '450px' }} name="flightStatus" value={formData.flightStatus} onChange={handleChange}>
+                            <option value="DELAYED">Delayed</option>
+                            <option value="IN_AIR">In Air</option>
+                            <option value="ARRIVED">Arrived</option>
+                            <option value="CANCELLED">Cancelled</option>
+                            <option value="SCHEDULED">Scheduled</option>
+                        </Form.Control>
                     </Form.Group>
                     <div className="d-flex justify-content-between">
                         <Button style={{ marginRight: '10px' }} variant="primary" type="submit" className="mt-3">
