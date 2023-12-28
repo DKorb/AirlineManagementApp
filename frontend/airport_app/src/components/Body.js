@@ -16,7 +16,7 @@ const Body = () => {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/flights?page=0&size=10')
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=200')
         .then(response => {
             if (!response.ok) {
               throw new Error('Network response was not ok')
@@ -50,7 +50,6 @@ const Body = () => {
 
     const handleTicket = () => {
         const selectedFlightNumber = searchTerm
-        console.log(selectedFlightNumber)
         const userId = localStorage.getItem("user_id")
         const accessToken = localStorage.getItem("access_token")
 

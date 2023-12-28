@@ -33,7 +33,7 @@ public class AirportController {
     public ResponseEntity<AirportDTO> getAirportById(@PathVariable Integer id) {
         return new ResponseEntity<>(airportService.findAirportById(id), HttpStatus.OK);
     }
-
+ 
     @PostMapping
     public ResponseEntity<AirportDTO> createAirport(@RequestBody Airport airport) {
         return new ResponseEntity<>(airportService.createAirport(airport), HttpStatus.OK);

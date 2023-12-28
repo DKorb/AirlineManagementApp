@@ -10,18 +10,25 @@ const ShowAllAirports = () => {
     const [airports, setAirports] = useState([])
     const [selectedAirportCode, setSelectedAirportCode] = useState('')
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [searchCode, setSearchCode] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [totalPages, setTotalPages] = useState(1)
+    const recordPerPage = 10
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/airports?page=0&size=10')
+        fetch(`http://localhost:9090/api/v1/airports?page=${currentPage - 1}&size=${recordPerPage}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
                 }
                 return response.json()
             })
-            .then(data => setAirports(data.content))
+            .then(data => {
+                setAirports(data.content)
+                setTotalPages(data.totalPages)
+            })
             .catch(error => console.error('Error fetching flights:', error))
-    }, [])
+    }, [currentPage])
 
     const handleEditAirport = (id) => {
         history.push(`/edit-airport/${id}`)
@@ -66,9 +73,30 @@ const ShowAllAirports = () => {
         window.location.reload(true)
     }
 
+    const showNextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1)
+        }
+    }
+
+    const showPrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1)
+        }
+    }
+
+    const filteredAirports = airports.filter(airport => airport.code.toLowerCase().includes(searchCode.toLowerCase()))
+
     return (
-        <div style={{ maxWidth: '1000px', margin: '150px auto' }}>
+        <div style={{ maxWidth: '1000px', margin: '50px auto' }}>
             <h1 style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ALL AIRPORTS</h1>
+            <input
+                type="search"
+                className='form-control rounded'
+                placeholder="🔍 Search by code"
+                value={searchCode}
+                onChange={(e) => setSearchCode(e.target.value)}
+            />
             <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>
@@ -80,7 +108,7 @@ const ShowAllAirports = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {airports.map(airport => (
+                    {filteredAirports.map(airport => (
                         <tr key={airport.code}>
                             <td>{airport.code}</td>
                             <td>{airport.name}</td>
@@ -98,9 +126,38 @@ const ShowAllAirports = () => {
                     ))}
                 </tbody>
             </Table>
-            <Button variant="info" type="submit" className="mt-3" onClick={handleBack}>
-                Back
-            </Button>
+            <div style={{ display: 'flex', alignItems: 'center'}}>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <button
+                            type="button"
+                            class="page-link"
+                            disabled={currentPage === 1 ? true : false}
+                            onClick={showPrevPage}
+                            className='btn btn-primary'
+                            style={{ marginRight: '5px' }}
+                        >
+                            Previous
+                        </button>
+                    </li>
+                    <li class="page-item">
+                        <button
+                            type="button"
+                            class="page-link"
+                            disabled={currentPage === totalPages ? true : false}
+                            onClick={showNextPage}
+                            className='btn btn-primary'
+                        >
+                            Next
+                        </button>
+                    </li>
+                </ul>
+                <div style={{ marginLeft: 'auto', marginBottom: '25px' }}>
+                    <Button variant="info" type="submit" className="mt-3" onClick={handleBack}>
+                        Back
+                    </Button>
+                </div>
+            </div>
             <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Delete</Modal.Title>
