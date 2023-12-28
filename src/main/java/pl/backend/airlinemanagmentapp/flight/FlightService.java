@@ -42,11 +42,10 @@ public class FlightService {
                 .orElseThrow(() -> new FlightNotFoundException(flightNumber));
     }
 
-    public Flight findFlightById(Integer flightId) {
-        return flightRepository.findById(flightId)
-                .orElseThrow(() -> new FlightNotFoundException(flightId));
+    public Flight findFlightEntityByFlightNumber(String flightNumber) {
+        return flightRepository.findFlightByFlightNumber(flightNumber)
+                .orElseThrow(() -> new FlightNotFoundException(flightNumber));
     }
-
 
     public FlightResponseDTO createFlight(FlightDTO flightDTO) {
         var flightDuration = calculateMinutesBetweenFlights(flightDTO.departureTime(), flightDTO.arrivalTime());

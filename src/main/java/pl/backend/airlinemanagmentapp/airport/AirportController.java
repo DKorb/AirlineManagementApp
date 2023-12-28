@@ -1,6 +1,7 @@
 package pl.backend.airlinemanagmentapp.airport;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import pl.backend.airlinemanagmentapp.exceptions.dto.DefaultResponseDTO;
 @RestController
 @RequestMapping("/api/v1/airports")
 @RequiredArgsConstructor
+@Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
 public class AirportController {
 
@@ -23,7 +25,7 @@ public class AirportController {
     public ResponseEntity<Page<AirportDTO>> getAllAirports(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        log.info("Fetching all airports - page: {}, size: {}", page, size);
         var pageable = PageRequest.of(page, size);
         Page<AirportDTO> airportPage = airportService.findAllAirports(pageable);
         return new ResponseEntity<>(airportPage, HttpStatus.OK);
@@ -31,6 +33,7 @@ public class AirportController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AirportDTO> getAirportById(@PathVariable Integer id) {
+        log.info("Fetching airport with ID: {}", id);
         return new ResponseEntity<>(airportService.findAirportById(id), HttpStatus.OK);
     }
 

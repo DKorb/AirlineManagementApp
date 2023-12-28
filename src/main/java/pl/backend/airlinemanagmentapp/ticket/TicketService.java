@@ -58,7 +58,7 @@ public class TicketService {
 
     public TicketResponseDTO addTicketToUser(TicketDTO ticketDTO, Integer userId) {
         User user = userService.findUserById(userId);
-        Flight flight = flightService.findFlightById(ticketDTO.flightId());
+        Flight flight = flightService.findFlightEntityByFlightNumber(ticketDTO.flightNumber());
 
         Ticket ticket = Ticket.builder()
                 .user(user)
