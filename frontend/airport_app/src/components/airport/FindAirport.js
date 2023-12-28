@@ -16,7 +16,13 @@ const FindAirport = () => {
     const handleShow = () => setShow(true)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/airports?page=0&size=10')
+        const accessToken = localStorage.getItem("access_token")
+
+        fetch('http://localhost:9090/api/v1/airports?page=0&size=10', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
@@ -28,7 +34,13 @@ const FindAirport = () => {
     }, [])
 
     const handleSearch = () => {
-        fetch(`http://localhost:9090/api/v1/airports/${searchTerm}`)
+        const accessToken = localStorage.getItem("access_token")
+
+        fetch(`http://localhost:9090/api/v1/airports/${searchTerm}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 setAirportData(data)

@@ -16,7 +16,13 @@ const ShowAllFlights = () => {
     const recordPerPage = 10
 
     useEffect(() => {
-        fetch(`http://localhost:9090/api/v1/flights?page=${currentPage - 1}&size=${recordPerPage}`)
+        const accessToken = localStorage.getItem("access_token")
+
+        fetch(`http://localhost:9090/api/v1/flights?page=${currentPage - 1}&size=${recordPerPage}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
@@ -35,21 +41,33 @@ const ShowAllFlights = () => {
         window.location.reload(true)
     }
 
+    const handleEditFlightStatus = (flightNumber) => {
+        history.push(`edit-flight-status/${flightNumber}`)
+        window.location.reload(true)
+    }
+
     const handleDeleteClick = (flightNumber) => {
         setSelectedFlightNumber(flightNumber)
         setShowDeleteModal(true)
     }
 
     const handleDeleteConfirm = async () => {
+        const accessToken = localStorage.getItem("access_token")
+
         await fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
             }
         })
             .then(() => {
-                fetch('http://localhost:9090/api/v1/flights')
+                fetch('http://localhost:9090/api/v1/flights', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok')
@@ -108,7 +126,7 @@ const ShowAllFlights = () => {
                         <th>Arrival time</th>
                         <th>Flight duration</th>
                         <th>Flight status</th>
-                        <th style={{ width: '155px' }}>Actions</th>
+                        <th style={{ width: '235px' }}>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -125,6 +143,9 @@ const ShowAllFlights = () => {
                             <td>
                                 <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleEditFlight(flight.flightNumber)}>
                                     Edit
+                                </Button>
+                                <Button style={{ marginRight: '10px' }} variant="primary" onClick={() => handleEditFlightStatus(flight.flightNumber)}>
+                                    Status
                                 </Button>
                                 <Button variant="danger" onClick={() => handleDeleteClick(flight.flightNumber)}>
                                     Delete

@@ -9,6 +9,7 @@ const CreateNewAirport = () => {
     const history = useHistory()
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
+    const accessToken = localStorage.getItem("access_token")
 
     const [formData, setFormData] = useState({
         code: '',
@@ -30,6 +31,7 @@ const CreateNewAirport = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify(formData),
             })

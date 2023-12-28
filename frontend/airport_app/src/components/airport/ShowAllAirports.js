@@ -16,7 +16,13 @@ const ShowAllAirports = () => {
     const recordPerPage = 10
 
     useEffect(() => {
-        fetch(`http://localhost:9090/api/v1/airports?page=${currentPage - 1}&size=${recordPerPage}`)
+        const accessToken = localStorage.getItem("access_token")
+
+        fetch(`http://localhost:9090/api/v1/airports?page=${currentPage - 1}&size=${recordPerPage}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
@@ -41,15 +47,22 @@ const ShowAllAirports = () => {
     }
 
     const handleDeleteConfirm = async () => {
+        const accessToken = localStorage.getItem("access_token")
+
         await fetch(`http://localhost:9090/api/v1/airports/${selectedAirportCode}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
             }
         })
             .then(() => {
-                fetch('http://localhost:9090/api/v1/airports')
+                fetch('http://localhost:9090/api/v1/airports', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok')
@@ -126,7 +139,7 @@ const ShowAllAirports = () => {
                     ))}
                 </tbody>
             </Table>
-            <div style={{ display: 'flex', alignItems: 'center'}}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
                 <ul class="pagination">
                     <li class="page-item">
                         <button

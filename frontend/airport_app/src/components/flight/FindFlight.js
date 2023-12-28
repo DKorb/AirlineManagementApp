@@ -16,7 +16,13 @@ const FindFlight = () => {
     const handleShow = () => setShow(true)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/flights?page=0&size=10')
+        const accessToken = localStorage.getItem("access_token")
+
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=10', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
@@ -30,13 +36,18 @@ const FindFlight = () => {
 
     const handleSearch = () => {
         const selectedFlightNumber = searchTerm
+        const accessToken = localStorage.getItem("access_token")
 
         if (!selectedFlightNumber) {
             setError('Please select a flight from the list.')
             return;
         }
 
-        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`)
+        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 setFlightData(data)

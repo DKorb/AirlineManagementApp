@@ -114,7 +114,6 @@ public class FlightService {
         existingFlight.setArrivalTime(flightDTO.arrivalTime());
         existingFlight.setDepartureTime(flightDTO.departureTime());
         existingFlight.setFlightDuration(calculateMinutesBetweenFlights(flightDTO.departureTime(), flightDTO.arrivalTime()));
-        existingFlight.setFlightStatus(flightDTO.flightStatus());
 
         var updatedFlight = flightRepository.save(existingFlight);
 

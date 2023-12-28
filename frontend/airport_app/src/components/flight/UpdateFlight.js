@@ -17,13 +17,18 @@ const UpdateFlight = () => {
         departureAirportId: null,
         arrivalAirportId: null,
         departureTime: '',
-        arrivalTime: '',
-        flightStatus: ''
+        arrivalTime: ''
     })
 
     useEffect(() => {
+        const accessToken = localStorage.getItem("access_token")
+
         if (id) {
-            fetch(`http://localhost:9090/api/v1/flights/${id}`)
+            fetch(`http://localhost:9090/api/v1/flights/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     const departureAirportId = data.departureAirport ? data.departureAirport.id : null
@@ -35,8 +40,7 @@ const UpdateFlight = () => {
                         departureAirportId: departureAirportId,
                         arrivalAirportId: arrivalAirportId,
                         departureTime: data.departureTime,
-                        arrivalTime: data.arrivalTime,
-                        flightStatus: data.flightStatus
+                        arrivalTime: data.arrivalTime
                     })
                 })
                 .catch(error => console.error('Error fetching flights:', error))
@@ -50,12 +54,14 @@ const UpdateFlight = () => {
 
     const handleEditFlight = async (e) => {
         e.preventDefault()
+        const accessToken = localStorage.getItem("access_token")
 
         try {
             const response = await fetch(`http://localhost:9090/api/v1/flights/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify(formData)
             })
@@ -90,25 +96,16 @@ const UpdateFlight = () => {
                         <Form.Control required style={{ width: '450px' }} type="text" name="airlineName" value={formData.airlineName} placeholder="Enter airline name" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupDepartureAirportId">
-                        <Form.Control required style={{ width: '450px' }} type="number" name="departureAirportId" value={formData.departureAirportId} placeholder="Enter departure airport" onChange={handleChange} />
+                        <Form.Control required min={1} style={{ width: '450px' }} type="number" name="departureAirportId" value={formData.departureAirportId} placeholder="Enter departure airport" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupArrivalAirportId">
-                        <Form.Control required style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
+                        <Form.Control required min={1} style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupDepartureTime">
                         <Form.Control required style={{ width: '450px' }} type="text" name="departureTime" value={formData.departureTime} placeholder="Enter departure time" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupArrivalTime">
                         <Form.Control required style={{ width: '450px' }} type="text" name="arrivalTime" value={formData.arrivalTime} placeholder="Enter arrival time" onChange={handleChange} />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formGroupFlightStatus">
-                        <Form.Control as="select" style={{ width: '450px' }} name="flightStatus" value={formData.flightStatus} onChange={handleChange}>
-                            <option value="DELAYED">Delayed</option>
-                            <option value="IN_AIR">In Air</option>
-                            <option value="ARRIVED">Arrived</option>
-                            <option value="CANCELLED">Cancelled</option>
-                            <option value="SCHEDULED">Scheduled</option>
-                        </Form.Control>
                     </Form.Group>
                     <div className="d-flex justify-content-between">
                         <Button style={{ marginRight: '10px' }} variant="primary" type="submit" className="mt-3">

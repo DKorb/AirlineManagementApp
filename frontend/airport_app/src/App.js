@@ -15,6 +15,7 @@ import UpdateFlight from './components/flight/UpdateFlight'
 import FindFlight from './components/flight/FindFlight'
 import Ticket from './components/ticket/Ticket'
 import NotFound from './components/NotFound'
+import UpdateFlightStatus from './components/flight/UpdateFlightStatus'
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <PrivateRoute path="/create-flight" component={CreateNewFlight} />
         <PrivateRoute path="/all-flights" component={ShowAllFlights} />
         <PrivateRoute path="/edit-flight/:id" component={UpdateFlight} />
+        <PrivateRoute path="/edit-flight-status/:id" component={UpdateFlightStatus} />
         <PrivateRoute path="/find-flight" component={FindFlight} />
         <PrivateRoute path="/ticket" component={Ticket} />
         <Route path='*' component={NotFound} />

@@ -29,11 +29,14 @@ const CreateNewFlight = () => {
     const handleAddNewFlight = async (e) => {
         e.preventDefault()
 
+        const accessToken = localStorage.getItem("access_token")
+
         try {
             const response = await fetch('http://localhost:9090/api/v1/flights', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify(formData),
             })
@@ -71,10 +74,10 @@ const CreateNewFlight = () => {
                         <Form.Control required style={{ width: '450px' }} type="text" name="airlineName" value={formData.airlineName} placeholder="Enter airline name" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupDepartureAirportId">
-                        <Form.Control required style={{ width: '450px' }} type="number" name="departureAirportId" value={formData.departureAirportId} placeholder="Enter departure airport" onChange={handleChange} />
+                        <Form.Control required min={1} style={{ width: '450px' }} type="number" name="departureAirportId" value={formData.departureAirportId} placeholder="Enter departure airport" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupArrivalAirportId">
-                        <Form.Control required style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
+                        <Form.Control required min={1} style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupDepartureTime">
                         <Form.Control required style={{ width: '450px' }} type="text" name="departureTime" value={formData.departureTime} placeholder="Enter departure time (yyyy-MM-dd HH:mm:ss)" onChange={handleChange} pattern="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" />

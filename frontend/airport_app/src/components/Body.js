@@ -16,26 +16,37 @@ const Body = () => {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
     useEffect(() => {
-        fetch('http://localhost:9090/api/v1/flights?page=0&size=200')
-        .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok')
+        const accessToken = localStorage.getItem("access_token")
+
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=200', {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
             }
-            return response.json()
-          })
-          .then(data => setFlight(data.content)) 
-          .catch(error => console.error('Error fetching flights:', error))
-      }, [])
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok')
+                }
+                return response.json()
+            })
+            .then(data => setFlight(data.content))
+            .catch(error => console.error('Error fetching flights:', error))
+    }, [])
 
     const handleSearch = () => {
         const selectedFlightNumber = searchTerm
+        const accessToken = localStorage.getItem("access_token")
 
         if (!selectedFlightNumber) {
             setError('Please select a flight from the list.')
             return
         }
 
-        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`)
+        fetch(`http://localhost:9090/api/v1/flights/${selectedFlightNumber}`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 setFlightData(data)

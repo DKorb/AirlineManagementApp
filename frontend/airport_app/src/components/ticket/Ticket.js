@@ -17,8 +17,13 @@ const Ticket = () => {
 
     useEffect(() => {
         const username = localStorage.getItem("username")
+        const accessToken = localStorage.getItem("access_token")
 
-        fetch(`http://localhost:9090/api/v1/users/${username}/tickets`)
+        fetch(`http://localhost:9090/api/v1/users/${username}/tickets`, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
@@ -38,23 +43,29 @@ const Ticket = () => {
 
     const handleDeleteConfirm = async () => {
         const username = localStorage.getItem("username")
+        const accessToken = localStorage.getItem("access_token")
 
         await fetch(`http://localhost:9090/api/v1/users/${userId}/tickets/${selectedTicketId}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
             }
         })
             .then(() => {
-                fetch(`http://localhost:9090/api/v1/users/${username}/tickets`)
+                fetch(`http://localhost:9090/api/v1/users/${username}/tickets`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok')
                         }
                         return response.json()
                     })
-                    .then(data => setTickets(data.content))
+                    .then(data => setTickets(data))
                     .catch(error => console.error('Error fetching tickets:', error));
             })
             .catch(error => console.error('Error deleting ticket:', error))
@@ -65,12 +76,15 @@ const Ticket = () => {
     }
 
     const handleGenerateTicket = async (ticketId) => {
+        const accessToken = localStorage.getItem("access_token")
+
         try {
             const response = await fetch(`http://localhost:9090/api/v1/users/${userId}/tickets/${ticketId}/pdf`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/pdf',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 }
             })
 
