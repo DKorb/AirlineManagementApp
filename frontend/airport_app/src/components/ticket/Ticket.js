@@ -14,12 +14,11 @@ const Ticket = () => {
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
     const [searchUsername, setSearchUsername] = useState('')
-    const [currentPage, setCurrentPage] = useState(1)
-    const [totalPages, setTotalPages] = useState(1)
-    const recordPerPage = 10
 
     useEffect(() => {
-        fetch(`http://localhost:9090/api/v1/users/tickets?page=${currentPage - 1}&size=${recordPerPage}`)
+        const username = localStorage.getItem("username")
+
+        fetch(`http://localhost:9090/api/v1/users/${username}/tickets`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok')
@@ -27,11 +26,10 @@ const Ticket = () => {
                 return response.json()
             })
             .then(data => {
-                setTickets(data.content)
-                setTotalPages(data.totalPages)
+                setTickets(data)
             })
             .catch(error => console.error('Error fetching tickets:', error))
-    }, [currentPage])
+    }, [])
 
     const handleDeleteClick = (id) => {
         setSelectedTicketId(id)
@@ -39,6 +37,8 @@ const Ticket = () => {
     }
 
     const handleDeleteConfirm = async () => {
+        const username = localStorage.getItem("username")
+
         await fetch(`http://localhost:9090/api/v1/users/${userId}/tickets/${selectedTicketId}`, {
             method: 'DELETE',
             headers: {
@@ -47,7 +47,7 @@ const Ticket = () => {
             }
         })
             .then(() => {
-                fetch('http://localhost:9090/api/v1/users/tickets')
+                fetch(`http://localhost:9090/api/v1/users/${username}/tickets`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok')
@@ -108,20 +108,6 @@ const Ticket = () => {
         window.location.reload(true)
     }
 
-    const showNextPage = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1)
-        }
-    }
-
-    const showPrevPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1)
-        }
-    }
-
-    const filteredTickets = tickets.filter(ticket => ticket.user.username.toLowerCase().includes(searchUsername.toLowerCase()))
-
     return (
         <div style={{ maxWidth: '1000px', margin: '50px auto' }}>
             <h1 style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ALL TICKETS</h1>
@@ -146,7 +132,7 @@ const Ticket = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredTickets.map(ticket => (
+                    {tickets.map(ticket => (
                         <tr key={ticket.id}>
                             <td>{ticket.user.username}</td>
                             <td>{ticket.flight.flightNumber}</td>
@@ -165,38 +151,9 @@ const Ticket = () => {
                     ))}
                 </tbody>
             </Table>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <ul class="pagination">
-                    <li class="page-item">
-                        <button
-                            type="button"
-                            class="page-link"
-                            disabled={currentPage === 1 ? true : false}
-                            onClick={showPrevPage}
-                            className='btn btn-primary'
-                            style={{ marginRight: '5px' }}
-                        >
-                            Previous
-                        </button>
-                    </li>
-                    <li class="page-item">
-                        <button
-                            type="button"
-                            class="page-link"
-                            disabled={currentPage === totalPages ? true : false}
-                            onClick={showNextPage}
-                            className='btn btn-primary'
-                        >
-                            Next
-                        </button>
-                    </li>
-                </ul>
-                <div style={{ marginLeft: 'auto', marginBottom: '25px' }}>
-                    <Button variant="info" type="submit" className="mt-3" onClick={handleBack}>
-                        Back
-                    </Button>
-                </div>
-            </div>
+            <Button variant="info" type="submit" className="mt-3" onClick={handleBack}>
+                Back
+            </Button>
             <Modal show={showDeleteModal} onHide={handleDeleteCancel}>
                 <Modal.Header closeButton>
                     <Modal.Title>Confirm Delete</Modal.Title>

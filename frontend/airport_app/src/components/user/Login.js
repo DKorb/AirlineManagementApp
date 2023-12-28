@@ -44,6 +44,7 @@ const Login = () => {
                 localStorage.setItem("access_token", accessToken)
                 localStorage.setItem("refresh_token", refreshToken)
                 localStorage.setItem("user_id", decoded.userId)
+                localStorage.setItem("username", decoded.sub)
                 
                 setSuccess('You are logged in')
                 setTimeout(() => {
