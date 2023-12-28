@@ -36,4 +36,5 @@ VALUES ('Jan', 'Kowalski', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcv
        ('Jakub', 'Szymański', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcvYAKwiwI6', 'jszymanski@mail.com', 'USER', '2020-10-02'),
        ('Ewa', 'Szewczyk', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcvYAKwiwI6', 'eszewczyk@mail.com', 'USER', '2020-10-02'),
        ('Mateusz', 'Czarnecki', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcvYAKwiwI6', 'mczarnecki@mail.com', 'USER', '2020-10-02'),
-       ('Zofia', 'Nowicka', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcvYAKwiwI6', 'znowicka@mail.com', 'USER', '2020-10-02');
+       ('Zofia', 'Nowicka', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcvYAKwiwI6', 'znowicka@mail.com', 'USER', '2020-10-02'),
+       ('Admin', 'Adminvosky', '$2a$10$zSRRIc8KjNc74s4JhWbUS.Cj7/1HqaOIOQiz9G0PWGVcvYAKwiwI6', 'aadminovksy@mail.com', 'ADMIN', '2020-10-02');
