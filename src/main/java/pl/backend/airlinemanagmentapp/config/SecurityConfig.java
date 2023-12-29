@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
+                                .requestMatchers(POST, "/api/v1/users/*/tickets").hasAnyRole(ROLE_ADMIN, ROLE_USER)
                                 .requestMatchers(POST, AIRPORT_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(PUT, AIRPORT_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(DELETE, AIRPORT_ENDPOINT).hasAnyRole(ROLE_ADMIN)
@@ -66,7 +67,6 @@ public class SecurityConfig {
                                 .requestMatchers(PUT, USER_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(DELETE, USER_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(GET, USER_ENDPOINT).hasAnyRole(ROLE_ADMIN, ROLE_USER)
-                                .requestMatchers(POST, "/api/v1/users/*/tickets").hasAnyRole(ROLE_ADMIN, ROLE_USER)
                                 .anyRequest()
                                 .authenticated()
                 )
