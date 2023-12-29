@@ -101,10 +101,6 @@ const Ticket = () => {
                 window.URL.revokeObjectURL(url)
 
                 setSuccess('You generated ticket successfully!')
-                setTimeout(() => {
-                    history.push('/ticket')
-                    window.location.reload(true)
-                }, 1500)
             } else {
                 setErrors('Something went wrong!')
             }

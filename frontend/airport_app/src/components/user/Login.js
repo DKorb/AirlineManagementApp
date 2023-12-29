@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import { Alert } from "react-bootstrap"
@@ -8,8 +8,10 @@ import { jwtDecode } from "jwt-decode"
 const Login = () => {
 
     const history = useHistory()
+    const location = useLocation()
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
+    const message = location.state ? location.state.message : null
 
     const [formData, setFormData] = useState({
         username: '',
@@ -46,7 +48,7 @@ const Login = () => {
                 localStorage.setItem("user_id", decoded.userId)
                 localStorage.setItem("username", decoded.sub)
                 localStorage.setItem("role", decoded.role)
-                
+
                 setSuccess('You are logged in')
                 setTimeout(() => {
                     history.push('/')
@@ -63,6 +65,7 @@ const Login = () => {
     return (
         <div style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '20px', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', backdropFilter: 'blur(3px)', width: '500px' }}>
+                {message && <p style={{ color: 'red', marginTop: '5px', textAlign: 'center' }}>{message}</p>}
                 <Form onSubmit={handleLogin} className="d-flex flex-column align-items-center">
                     {errors && <Alert style={{ width: '100%', textAlign: 'center' }} variant='danger'>{errors}</Alert>}
                     {success && <Alert style={{ width: '100%', textAlign: 'center' }} variant='success'>{success}</Alert>}
