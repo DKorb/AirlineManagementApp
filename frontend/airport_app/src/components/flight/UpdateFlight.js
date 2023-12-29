@@ -2,7 +2,9 @@ import { useState, useEffect } from "react"
 import { useHistory, useParams } from "react-router-dom"
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { Alert } from "react-bootstrap"
+import { Alert, Row, Col } from "react-bootstrap"
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 const UpdateFlight = () => {
 
@@ -16,8 +18,8 @@ const UpdateFlight = () => {
         airlineName: '',
         departureAirportId: null,
         arrivalAirportId: null,
-        departureTime: '',
-        arrivalTime: ''
+        departureTime: null,
+        arrivalTime: null
     })
 
     useEffect(() => {
@@ -39,8 +41,8 @@ const UpdateFlight = () => {
                         airlineName: data.airlineName || '',
                         departureAirportId: departureAirportId,
                         arrivalAirportId: arrivalAirportId,
-                        departureTime: data.departureTime,
-                        arrivalTime: data.arrivalTime
+                        departureTime: data.departureTime ? new Date(data.departureTime) : null,
+                        arrivalTime: data.arrivalTime ? new Date(data.arrivalTime) : null
                     })
                 })
                 .catch(error => console.error('Error fetching flights:', error))
@@ -50,6 +52,10 @@ const UpdateFlight = () => {
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
+    }
+
+    const handleDateChange = (date, name) => {
+        setFormData({ ...formData, [name]: date })
     }
 
     const handleEditFlight = async (e) => {
@@ -101,12 +107,32 @@ const UpdateFlight = () => {
                     <Form.Group className="mb-3" controlId="formGroupArrivalAirportId">
                         <Form.Control required min={1} style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formGroupDepartureTime">
-                        <Form.Control required style={{ width: '450px' }} type="text" name="departureTime" value={formData.departureTime} placeholder="Enter departure time" onChange={handleChange} />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formGroupArrivalTime">
-                        <Form.Control required style={{ width: '450px' }} type="text" name="arrivalTime" value={formData.arrivalTime} placeholder="Enter arrival time" onChange={handleChange} />
-                    </Form.Group>
+                    <Row>
+                        <Col>
+                            <Form.Group className="mb-3" controlId="formGroupDepartureTime">
+                                <DatePicker
+                                    selected={formData.departureTime}
+                                    onChange={(date) => handleDateChange(date, 'departureTime')}
+                                    showTimeSelect
+                                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                                    placeholderText="Select departure time"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className="mb-3" controlId="formGroupArrivalTime">
+                                <DatePicker
+                                    selected={formData.arrivalTime}
+                                    onChange={(date) => handleDateChange(date, 'arrivalTime')}
+                                    showTimeSelect
+                                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                                    placeholderText="Select arrival time"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
                     <div className="d-flex justify-content-between">
                         <Button style={{ marginRight: '10px' }} variant="primary" type="submit" className="mt-3">
                             Edit

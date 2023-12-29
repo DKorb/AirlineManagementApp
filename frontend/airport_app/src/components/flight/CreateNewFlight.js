@@ -2,7 +2,9 @@ import { useState } from "react"
 import { useHistory } from "react-router-dom"
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { Alert } from "react-bootstrap"
+import { Alert, Row, Col } from "react-bootstrap"
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 const CreateNewFlight = () => {
 
@@ -15,8 +17,8 @@ const CreateNewFlight = () => {
         airlineName: '',
         departureAirportId: null,
         arrivalAirportId: null,
-        departureTime: '',
-        arrivalTime: '',
+        departureTime: null,
+        arrivalTime: null,
         flightStatus: 'SCHEDULED',
         flightDuration: ''
     })
@@ -24,6 +26,10 @@ const CreateNewFlight = () => {
     const handleChange = (e) => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
+    }
+
+    const handleDateChange = (date, name) => {
+        setFormData({ ...formData, [name]: date })
     }
 
     const handleAddNewFlight = async (e) => {
@@ -79,12 +85,32 @@ const CreateNewFlight = () => {
                     <Form.Group className="mb-3" controlId="formGroupArrivalAirportId">
                         <Form.Control required min={1} style={{ width: '450px' }} type="number" name="arrivalAirportId" value={formData.arrivalAirportId} placeholder="Enter arrival airport" onChange={handleChange} />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formGroupDepartureTime">
-                        <Form.Control required style={{ width: '450px' }} type="text" name="departureTime" value={formData.departureTime} placeholder="Enter departure time (yyyy-MM-dd HH:mm:ss)" onChange={handleChange} pattern="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formGroupArrivalTime">
-                        <Form.Control required style={{ width: '450px' }} type="text" name="arrivalTime" value={formData.arrivalTime} placeholder="Enter arrival time (yyyy-MM-dd HH:mm:ss)" onChange={handleChange} pattern="\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}" />
-                    </Form.Group>
+                    <Row>
+                        <Col>
+                            <Form.Group className="mb-3" controlId="formGroupDepartureTime">
+                                <DatePicker
+                                    selected={formData.departureTime}
+                                    onChange={(date) => handleDateChange(date, 'departureTime')}
+                                    showTimeSelect
+                                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                                    placeholderText="Select departure time"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className="mb-3" controlId="formGroupArrivalTime">
+                                <DatePicker
+                                    selected={formData.arrivalTime}
+                                    onChange={(date) => handleDateChange(date, 'arrivalTime')}
+                                    showTimeSelect
+                                    dateFormat="yyyy-MM-dd HH:mm:ss"
+                                    placeholderText="Select arrival time"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
                     <Form.Group className="mb-3" controlId="formGroupFlightStatus">
                         <Form.Control as="select" style={{ width: '450px' }} name="flightStatus" value={formData.flightStatus} onChange={handleChange}>
                             <option value="DELAYED">Delayed</option>

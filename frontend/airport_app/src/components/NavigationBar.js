@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'
 import { Container, Nav, Navbar } from "react-bootstrap"
 import { MdConnectingAirports, MdLogin, MdLocalAirport, MdFlightTakeoff, MdAirplaneTicket } from "react-icons/md"
 import { BsFillPersonPlusFill } from 'react-icons/bs'
@@ -7,6 +8,8 @@ import { IoIosLogOut } from "react-icons/io"
 const NavigationBar = () => {
 
     const history = useHistory()
+    const username = localStorage.getItem("username")
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const logout = async () => {
         try {
@@ -22,7 +25,7 @@ const NavigationBar = () => {
                     window.location.reload(true)
                 }, 1500)
             } else {
-               console.log("Error while logout") 
+                console.log("Error while logout")
             }
         } catch (error) {
             console.error('Error while logout ', error)
@@ -55,12 +58,22 @@ const NavigationBar = () => {
 
     const userNavbar = () => (
         <>
-            <Nav.Link onClick={handleAirport} style={{ marginLeft: '50px' }} href='/airport'><MdLocalAirport style={{ marginRight: '5px' }} />Airports</Nav.Link>
+            {isAdmin && (
+                <Nav.Link onClick={handleAirport} style={{ marginLeft: '50px' }} href='/airport'><MdLocalAirport style={{ marginRight: '5px' }} />Airports</Nav.Link>
+            )}
             <Nav.Link onClick={handleFlight} style={{ marginLeft: '50px' }} href='/flight'><MdFlightTakeoff style={{ marginRight: '5px' }} />Flights</Nav.Link>
-            <Nav.Link onClick={handleTicket} style={{ marginLeft: '50px' }} href='/ticket'><MdAirplaneTicket  style={{ marginRight: '5px' }} />Tickets</Nav.Link>
+            <Nav.Link onClick={handleTicket} style={{ marginLeft: '50px' }} href='/ticket'><MdAirplaneTicket style={{ marginRight: '5px' }} />Tickets</Nav.Link>
+            {username && (
+                <Nav.Link style={{ position: 'absolute', right: 150, top: 10 }}>{username}</Nav.Link>
+            )}
             <Nav.Link onClick={logout} style={{ position: 'absolute', right: 10, top: 10 }} href='/login'><IoIosLogOut />Logout</Nav.Link>
         </>
     )
+
+    useEffect(() => {
+        const role = localStorage.getItem("role")
+        setIsAdmin(!!role && role === "ADMIN")
+    }, [])
 
     return (
         <div>

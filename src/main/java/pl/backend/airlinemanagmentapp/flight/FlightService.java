@@ -16,6 +16,7 @@ import pl.backend.airlinemanagmentapp.ticket.TicketRepository;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -137,7 +138,7 @@ public class FlightService {
         flightRepository.deleteByFlightNumber(flightNumber);
     }
 
-    public Long calculateMinutesBetweenFlights(LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    public Long calculateMinutesBetweenFlights(ZonedDateTime departureTime, ZonedDateTime arrivalTime) {
         return Duration.between(departureTime, arrivalTime).toMinutes();
     }
 

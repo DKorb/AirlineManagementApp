@@ -5,6 +5,7 @@ import pl.backend.airlinemanagmentapp.airport.dto.AirportBasicDTO;
 import pl.backend.airlinemanagmentapp.flight.FlightStatus;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public record FlightResponseDTO(
         Integer id,
@@ -13,9 +14,9 @@ public record FlightResponseDTO(
         AirportBasicDTO departureAirport,
         AirportBasicDTO arrivalAirport,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime departureTime,
+        ZonedDateTime departureTime,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime arrivalTime,
+        ZonedDateTime arrivalTime,
         FlightStatus flightStatus,
         Long flightDuration
 ) {}

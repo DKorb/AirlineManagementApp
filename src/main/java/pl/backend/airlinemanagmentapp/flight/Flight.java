@@ -10,6 +10,7 @@ import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.ticket.Ticket;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -43,11 +44,11 @@ public class Flight {
 
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime departureTime;
+    private ZonedDateTime departureTime;
 
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime arrivalTime;
+    private ZonedDateTime arrivalTime;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

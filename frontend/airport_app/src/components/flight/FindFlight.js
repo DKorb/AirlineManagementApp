@@ -12,13 +12,15 @@ const FindFlight = () => {
     const [flight, setFlight] = useState([])
     const [show, setShow] = useState(false)
     const [error, setError] = useState(null)
+    const [success, setSuccess] = useState(null)
     const handleClose = () => setShow(false)
     const handleShow = () => setShow(true)
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token")
 
-        fetch('http://localhost:9090/api/v1/flights?page=0&size=10', {
+        fetch('http://localhost:9090/api/v1/flights?page=0&size=200', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
@@ -60,10 +62,47 @@ const FindFlight = () => {
             })
     }
 
+    const handleTicket = () => {
+        const selectedFlightNumber = searchTerm
+        const userId = localStorage.getItem("user_id")
+        const accessToken = localStorage.getItem("access_token")
+
+        if (!userId) {
+            setError('User not logged in.')
+            return
+        }
+
+        fetch(`http://localhost:9090/api/v1/users/${userId}/tickets`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+                flightNumber: selectedFlightNumber,
+                purchaseTime: new Date().toISOString(),
+            }),
+        })
+            .then(response => response.json())
+            .then(() => {
+                setSuccess('You bought the ticket for this flight')
+                handleClose()
+            })
+            .catch(error => {
+                setError(error.message)
+            })
+    }
+
     const handleBack = () => {
         history.push('/flight')
         window.location.reload(true)
     }
+
+    useEffect(() => {
+        const userId = localStorage.getItem("user_id")
+        const accessToken = localStorage.getItem("access_token")
+        setIsUserLoggedIn(!!(userId && accessToken))
+    }, [])
 
     return (
         <div style={{ backgroundSize: 'cover', backgroundPosition: 'center', height: '80vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -71,6 +110,7 @@ const FindFlight = () => {
                 <h1 style={{ color: 'white', fontSize: '30px', letterSpacing: '3px' }}>FIND FLIGHT</h1>
                 <Form className="d-flex flex-column align-items-center">
                     {error && <p style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
+                    {success && <p style={{ color: 'green', marginTop: '5px' }}>{success}</p>}
                     <InputGroup className="mb-3">
                         <FaSearch style={{ color: 'white', fontSize: '30px', marginRight: '10px', marginTop: '5px' }} />
                         <Form.Select
@@ -108,6 +148,11 @@ const FindFlight = () => {
                                     </>
                                 ) : (
                                     <p>Loading...</p>
+                                )}
+                                {isUserLoggedIn && (
+                                    <Button variant="success" id="button-addon2" onClick={handleTicket}>
+                                        Buy ticket
+                                    </Button>
                                 )}
                             </Offcanvas.Body>
                         </Offcanvas>

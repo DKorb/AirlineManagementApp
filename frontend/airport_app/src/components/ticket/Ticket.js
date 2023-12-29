@@ -14,6 +14,7 @@ const Ticket = () => {
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
     const [searchUsername, setSearchUsername] = useState('')
+    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         const username = localStorage.getItem("username")
@@ -122,18 +123,25 @@ const Ticket = () => {
         window.location.reload(true)
     }
 
+    useEffect(() => {
+        const role = localStorage.getItem("role")
+        setIsAdmin(!!role && role === "ADMIN")
+    }, [])
+
     return (
         <div style={{ maxWidth: '1000px', margin: '50px auto' }}>
             <h1 style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ALL TICKETS</h1>
             {errors && <Alert style={{ width: '100%', textAlign: 'center' }} variant='danger'>{errors}</Alert>}
             {success && <Alert style={{ width: '100%', textAlign: 'center' }} variant='success'>{success}</Alert>}
-            <input
-                type="search"
-                className='form-control rounded'
-                placeholder="🔍 Search by username"
-                value={searchUsername}
-                onChange={(e) => setSearchUsername(e.target.value)}
-            />
+            {isAdmin && (
+                <input
+                    type="search"
+                    className='form-control rounded'
+                    placeholder="🔍 Search by username"
+                    value={searchUsername}
+                    onChange={(e) => setSearchUsername(e.target.value)}
+                />
+            )}
             <Table striped bordered hover variant="dark">
                 <thead>
                     <tr>
@@ -142,7 +150,11 @@ const Ticket = () => {
                         <th>Airline name</th>
                         <th>Departure airport name (code)</th>
                         <th>Arrival airport name (code)</th>
-                        <th style={{ width: '190px' }}>Actions</th>
+                        {isAdmin ? (
+                            <th style={{ width: '190px' }}>Actions</th>
+                        ) : (
+                            <th style={{ width: '90px' }}>Actions</th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -157,9 +169,11 @@ const Ticket = () => {
                                 <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleGenerateTicket(ticket.ticketId)}>
                                     Generate
                                 </Button>
-                                <Button variant="danger" onClick={() => handleDeleteClick(ticket.ticketId)}>
-                                    Delete
-                                </Button>
+                                {isAdmin && (
+                                    <Button variant="danger" onClick={() => handleDeleteClick(ticket.ticketId)}>
+                                        Delete
+                                    </Button>
+                                )}
                             </td>
                         </tr>
                     ))}

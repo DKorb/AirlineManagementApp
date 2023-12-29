@@ -14,6 +14,7 @@ const ShowAllFlights = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const recordPerPage = 10
+    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token")
@@ -103,6 +104,11 @@ const ShowAllFlights = () => {
         }
     }
 
+    useEffect(() => {
+        const role = localStorage.getItem("role")
+        setIsAdmin(!!role && role === "ADMIN")
+    }, [])
+
     const filteredFlights = flights.filter(flight => flight.flightNumber.toLowerCase().includes(searchFlightNumber.toLowerCase()))
 
     return (
@@ -126,7 +132,9 @@ const ShowAllFlights = () => {
                         <th>Arrival time</th>
                         <th>Flight duration</th>
                         <th>Flight status</th>
+                        {isAdmin && (
                         <th style={{ width: '235px' }}>Actions</th>
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -140,6 +148,7 @@ const ShowAllFlights = () => {
                             <td>{flight.arrivalTime}</td>
                             <td>{flight.flightDuration} min.</td>
                             <td>{flight.flightStatus}</td>
+                            {isAdmin && (
                             <td>
                                 <Button style={{ marginRight: '10px' }} variant="info" onClick={() => handleEditFlight(flight.flightNumber)}>
                                     Edit
@@ -151,6 +160,7 @@ const ShowAllFlights = () => {
                                     Delete
                                 </Button>
                             </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
