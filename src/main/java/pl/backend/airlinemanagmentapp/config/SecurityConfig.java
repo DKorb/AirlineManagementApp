@@ -61,7 +61,7 @@ public class SecurityConfig {
                                 .requestMatchers(PUT, FLIGHT_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(PATCH, FLIGHT_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(DELETE, FLIGHT_ENDPOINT).hasAnyRole(ROLE_ADMIN)
-                                .requestMatchers(GET, FLIGHT_ENDPOINT).hasAnyRole(ROLE_ADMIN, ROLE_USER)
+                                .requestMatchers(GET, FLIGHT_ENDPOINT).permitAll()
                                 .requestMatchers(POST, USER_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(PUT, USER_ENDPOINT).hasAnyRole(ROLE_ADMIN)
                                 .requestMatchers(DELETE, USER_ENDPOINT).hasAnyRole(ROLE_ADMIN)

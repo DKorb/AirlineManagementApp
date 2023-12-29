@@ -16,6 +16,7 @@ import FindFlight from './components/flight/FindFlight'
 import Ticket from './components/ticket/Ticket'
 import NotFound from './components/NotFound'
 import UpdateFlightStatus from './components/flight/UpdateFlightStatus'
+import Permissions from './components/Permissions'
 
 function App() {
   return (
@@ -26,19 +27,20 @@ function App() {
         <Route path="/" exact component={Body} />
         <Route path="/register" component={Register} />
         <Route path="/login" component={Login} />
-        <PrivateRoute path="/airport" component={Airport} />
-        <PrivateRoute path="/create-airport" component={CreateNewAirport} />
-        <PrivateRoute path="/all-airports" component={ShowAllAirports} />
-        <PrivateRoute path="/find-airport" component={FindAirport} />
-        <PrivateRoute path="/edit-airport/:id" component={UpdateAirport} />
+        <PrivateRoute path="/airport" component={Airport} requiredRole="ADMIN" />
+        <PrivateRoute path="/create-airport" component={CreateNewAirport} requiredRole="ADMIN" />
+        <PrivateRoute path="/all-airports" component={ShowAllAirports} requiredRole="ADMIN" />
+        <PrivateRoute path="/find-airport" component={FindAirport} requiredRole="ADMIN" />
+        <PrivateRoute path="/edit-airport/:id" component={UpdateAirport} requiredRole="ADMIN" />
         <PrivateRoute path="/flight" component={Flights} />
-        <PrivateRoute path="/create-flight" component={CreateNewFlight} />
+        <PrivateRoute path="/create-flight" component={CreateNewFlight} requiredRole="ADMIN" />
         <PrivateRoute path="/all-flights" component={ShowAllFlights} />
-        <PrivateRoute path="/edit-flight/:id" component={UpdateFlight} />
-        <PrivateRoute path="/edit-flight-status/:id" component={UpdateFlightStatus} />
+        <PrivateRoute path="/edit-flight/:id" component={UpdateFlight} requiredRole="ADMIN" />
+        <PrivateRoute path="/edit-flight-status/:id" component={UpdateFlightStatus} requiredRole="ADMIN" />
         <PrivateRoute path="/find-flight" component={FindFlight} />
         <PrivateRoute path="/ticket" component={Ticket} />
-        <Route path='*' component={NotFound} />
+        <Route path="/permission" component={Permissions} />
+        <Route path="*" component={NotFound} />
       </Switch>
     </Router>
   )
@@ -46,28 +48,42 @@ function App() {
 
 function BackImage() {
   return (
-    <img className='background-image' 
-    src={"/images/airport-background.jpg"} 
-    alt='backgroundimg'/>
+    <img className='background-image'
+      src={"/images/airport-background.jpg"}
+      alt='backgroundimg' />
   )
 }
 
-function PrivateRoute({ component: Component, ...rest}) {
+function PrivateRoute({ component: Component, requiredRole, ...rest }) {
   return (
     <Route
       {...rest}
-      render={props =>
-      localStorage.getItem("user_id") !== null ? (
-        <Component {...props} />
-      ) : (
-        <Redirect
-        to={{
-          pathname: "/login",
-          state: {from: props.location}
-        }}
-        />
-      )}
-      />
+      render={(props) => {
+        const isLoggedIn = localStorage.getItem("user_id") !== null
+        const userRole = localStorage.getItem("role")
+
+        if (isLoggedIn) {
+          if (requiredRole === "ADMIN" && userRole === "ADMIN") {
+            return <Component {...props} />
+          } else if (!requiredRole) {
+            return <Component {...props} />
+          }
+        }
+        return (
+          <Redirect
+            to={{
+              pathname: isLoggedIn ? "/permission" : "/login",
+              state: {
+                from: props.location,
+                message: requiredRole
+                  ? "You do not have permission to access this page. Please log in with an admin account."
+                  : "You have no access to this site. Please log in.",
+              },
+            }}
+          />
+        )
+      }}
+    />
   )
 }
 
