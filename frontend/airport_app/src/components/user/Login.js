@@ -55,7 +55,7 @@ const Login = () => {
                     window.location.reload(true)
                 }, 1500)
             } else {
-                setErrors('Something went wrong!')
+                setErrors('Something went wrong! Check your credentials!')
             }
         } catch (error) {
             console.error('Error occurs:', error)

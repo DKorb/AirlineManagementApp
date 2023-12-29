@@ -10,6 +10,7 @@ const RegisterForm = () => {
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
     const [passwordRequirements, setPasswordRequirements] = useState('')
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false)
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -63,6 +64,14 @@ const RegisterForm = () => {
         return hasUppercase && hasNumber && hasSpecialChar && hasAtLeast6Characters
     }
 
+    const handlePasswordFocus = () => {
+        setIsPasswordFocused(true)
+    }
+
+    const handlePasswordBlur = () => {
+        setIsPasswordFocused(false)
+    }
+
     const handleRegister = async (e) => {
         e.preventDefault()
 
@@ -114,9 +123,9 @@ const RegisterForm = () => {
                         <Form.Control required style={{ width: '450px' }} type="email" name="email" value={formData.email} placeholder="Enter email" onChange={handleChange} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupPassword">
-                        <Form.Control required style={{ width: '450px' }} type="password" name="password" value={formData.password} placeholder="Enter password" onChange={handleChange} />
+                        <Form.Control required style={{ width: '450px' }} type="password" name="password" value={formData.password} placeholder="Enter password" onChange={handleChange} onFocus={handlePasswordFocus} onBlur={handlePasswordBlur} />
                     </Form.Group>
-                    {passwordRequirements && (
+                    {isPasswordFocused && passwordRequirements && (
                         <p style={{ color: 'rgb(255, 255, 255)', fontSize: '12px' }}>
                             {passwordRequirements}
                         </p>
