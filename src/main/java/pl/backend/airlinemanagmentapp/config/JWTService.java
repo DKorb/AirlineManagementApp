@@ -40,6 +40,7 @@ public class JWTService {
 
         if (userDetails instanceof User user) {
             claims.put("userId", user.getId());
+            claims.put("role", user.getRole().toString());
         }
 
         return generateToken(claims, userDetails);
