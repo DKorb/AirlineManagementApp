@@ -9,6 +9,8 @@ const CreateNewAirport = () => {
     const history = useHistory()
     const [success, setSuccess] = useState('')
     const [errors, setErrors] = useState('')
+    const [codeLength, setCodeLength] = useState(0)
+    const [codeClicked, setCodeClicked] = useState(false)
     const accessToken = localStorage.getItem("access_token")
 
     const [formData, setFormData] = useState({
@@ -20,6 +22,11 @@ const CreateNewAirport = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target
+
+        if (name === 'code') {
+            setCodeLength(value.length)
+        }
+
         setFormData({ ...formData, [name]: value })
     }
 
@@ -63,7 +70,12 @@ const CreateNewAirport = () => {
                     {success && <Alert style={{ width: '100%', textAlign: 'center' }} variant='success'>{success}</Alert>}
                     <h1 className="mb-4" style={{ color: 'white', fontSize: '50px', letterSpacing: '3px' }}>ADD NEW AIRPORT</h1>
                     <Form.Group className="mb-3" controlId="formGroupCode">
-                        <Form.Control maxLength={3} required style={{ width: '450px' }} type="text" name="code" value={formData.code} placeholder="Enter code (three characters long)" onChange={handleChange} />
+                        <Form.Control maxLength={3} required style={{ width: '450px' }} type="text" name="code" value={formData.code} placeholder="Enter code (three characters long)" onChange={handleChange} onClick={() => setCodeClicked(true)} />
+                        {codeClicked && codeLength < 3 && (
+                            <Form.Text style={{ color: 'red' }}>
+                                Code should be 3 characters long!
+                            </Form.Text>
+                        )}
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formGroupName">
                         <Form.Control required style={{ width: '450px' }} type="text" name="name" value={formData.name} placeholder="Enter airport name" onChange={handleChange} />

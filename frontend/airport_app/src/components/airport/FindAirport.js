@@ -18,7 +18,7 @@ const FindAirport = () => {
     useEffect(() => {
         const accessToken = localStorage.getItem("access_token")
 
-        fetch('http://localhost:9090/api/v1/airports?page=0&size=10', {
+        fetch('http://localhost:9090/api/v1/airports?page=0&size=200', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
