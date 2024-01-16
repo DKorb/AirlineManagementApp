@@ -42,5 +42,4 @@ public class Airport {
     @OneToMany(mappedBy = "arrivalAirport")
     private Set<Flight> arrivingFlights;
 
-
 }

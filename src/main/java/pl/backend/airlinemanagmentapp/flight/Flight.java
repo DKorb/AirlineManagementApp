@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.ticket.Ticket;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 

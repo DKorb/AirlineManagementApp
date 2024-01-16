@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
-    List<Ticket> findTicketsByUserId(Integer userId);
 
     List<Ticket> findTicketsByUserUsername(String username);
 

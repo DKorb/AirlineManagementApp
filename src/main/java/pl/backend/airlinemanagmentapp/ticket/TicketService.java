@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.Airport;
-import pl.backend.airlinemanagmentapp.airport.dto.AirportBasicDTO;
+import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.exceptions.TicketNotFoundException;
 import pl.backend.airlinemanagmentapp.flight.Flight;
 import pl.backend.airlinemanagmentapp.flight.FlightService;
@@ -83,8 +83,8 @@ public class TicketService {
     }
 
     private FlightResponseDTO convertToFlightResponseDTO(Flight flight) {
-        AirportBasicDTO departureInfo = convertToAirportBasicInfo(flight.getDepartureAirport());
-        AirportBasicDTO arrivalInfo = convertToAirportBasicInfo(flight.getArrivalAirport());
+        AirportDTO departureInfo = convertToAirportBasicInfo(flight.getDepartureAirport());
+        AirportDTO arrivalInfo = convertToAirportBasicInfo(flight.getArrivalAirport());
         return new FlightResponseDTO(flight.getId(),
                 flight.getFlightNumber(),
                 flight.getAirlineName(),
@@ -96,7 +96,7 @@ public class TicketService {
                 flight.getFlightDuration());
     }
 
-    private AirportBasicDTO convertToAirportBasicInfo(Airport airport) {
-        return new AirportBasicDTO(airport.getId(), airport.getCode(), airport.getName(), airport.getCity(), airport.getCountry());
+    private AirportDTO convertToAirportBasicInfo(Airport airport) {
+        return new AirportDTO(airport.getId(), airport.getCode(), airport.getName(), airport.getCity(), airport.getCountry());
     }
 }

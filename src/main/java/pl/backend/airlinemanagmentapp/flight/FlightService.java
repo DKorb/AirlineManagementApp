@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.backend.airlinemanagmentapp.airport.Airport;
 import pl.backend.airlinemanagmentapp.airport.AirportService;
-import pl.backend.airlinemanagmentapp.airport.dto.AirportBasicDTO;
+import pl.backend.airlinemanagmentapp.airport.dto.AirportDTO;
 import pl.backend.airlinemanagmentapp.exceptions.CustomDuplicateKeyException;
 import pl.backend.airlinemanagmentapp.exceptions.FlightNotFoundException;
 import pl.backend.airlinemanagmentapp.flight.dto.FlightDTO;
@@ -15,7 +15,6 @@ import pl.backend.airlinemanagmentapp.flight.dto.FlightStatusDTO;
 import pl.backend.airlinemanagmentapp.ticket.TicketRepository;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Service
@@ -29,12 +28,6 @@ public class FlightService {
     public Page<FlightResponseDTO> findAllFlights(Pageable pageable) {
         return flightRepository.findAll(pageable)
                 .map(this::convertToFlightResponseDTO);
-    }
-
-    public FlightResponseDTO findFlightResponseById(Integer flightId) {
-        return flightRepository.findById(flightId)
-                .map(this::convertToFlightResponseDTO)
-                .orElseThrow(() -> new FlightNotFoundException(flightId));
     }
 
     public FlightResponseDTO findFlightByFlightNumber(String flightNumber) {
@@ -90,8 +83,8 @@ public class FlightService {
                 flight.getFlightDuration());
     }
 
-    private AirportBasicDTO convertToAirportBasicInfo(Airport airport) {
-        return new AirportBasicDTO(
+    private AirportDTO convertToAirportBasicInfo(Airport airport) {
+        return new AirportDTO(
                 airport.getId(),
                 airport.getCode(),
                 airport.getName(),

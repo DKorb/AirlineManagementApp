@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class AirlineManagementAppApplication {
 
 	public static void main(String[] args) {
-		// ustawienie zmiennych środowiskowych przez bilbioteke https://github.com/cdimascio/dotenv-java
 		var dotenv = Dotenv.load();
 		System.setProperty("SPRING_DATASOURCE_USERNAME", dotenv.get("SPRING_DATASOURCE_USERNAME"));
 		System.setProperty("SPRING_DATASOURCE_PASSWORD", dotenv.get("SPRING_DATASOURCE_PASSWORD"));
